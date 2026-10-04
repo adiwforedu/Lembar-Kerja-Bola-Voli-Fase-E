@@ -561,6 +561,39 @@
     
     .toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 12px 24px; border-radius: 30px; font-weight: 700; transition: top 0.35s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; box-shadow: 0 6px 20px rgba(0,0,0,0.2); width: 80%; max-width: 380px; text-align: center; font-size: 0.9rem; }
     .toast.show { top: 24px; }
+
+    /* MOBILE RESPONSIVE FOR COURT & OFFICIALS */
+    @media (max-width: 768px) {
+      .court-live { padding: 15px 46px; }
+      
+      .player-node { width: 44px; height: 38px; border-width: 2px;}
+      .player-node .name { font-size: 0.55rem; width: 40px; }
+      .player-node .progress { font-size: 0.5rem; padding: 1px 3px; }
+      
+      .player-node.official { width: 42px; height: 26px; border-width: 2px; }
+      .player-node.official .name { font-size: 0.5rem; }
+      
+      .pos-W1 { left: 0%; top: 50%; }   
+      .pos-W2 { left: 100%; top: 50%; }  
+      .pos-HG1 { left: 0%; top: 0%; }  
+      .pos-HG2 { left: 100%; top: 0%; } 
+      .pos-HG3 { left: 0%; top: 100%; } 
+      .pos-HG4 { left: 100%; top: 100%; } 
+      
+      /* Pertahankan peran di sisi kiri/kanan sesuai ketentuan bola voli (tidak di belakang) */
+      .pos-Scorer { left: calc(0% - 24px); top: 50%; }
+      .pos-PelatihB { left: calc(0% - 24px); top: 25%; }
+      .pos-PelatihA { left: calc(0% - 24px); top: 75%; }
+      
+      .pos-Komentator { left: calc(100% + 24px); top: 25%; }
+      .pos-Medis { left: calc(100% + 24px); top: 75%; }
+      
+      .btn-rotate { right: -38px; width: 30px; height: 30px; font-size: 0.8rem; border-width: 1px; }
+      .rotate-top { top: 30%; }
+      .rotate-bot { bottom: 30%; }
+      
+      .court-label { font-size: 1.8rem; }
+    }
   </style>
 </head>
 <body>
@@ -1262,74 +1295,10 @@
   </div>
 
   <!-- TAB 2: SIMULASI PERAN DAN POSISI -->
+    <div id="assessmentView" class="active-flex">
+
   <div id="tabSimulasi" class="main-tab-content">
-    <!-- VIEW 1: SETUP -->
-    <div id="setupView" class="container" style="padding-top: 15px;">
-    
-    <button class="btn-secondary btn-cloud" id="btnUploadCloud" onclick="uploadToCloud()" style="display:none;">
-      <i class="fas fa-cloud-upload-alt"></i> Upload <span id="syncCount">0</span> Pertandingan ke Cloud
-    </button>
-
-
-    <!-- PEMAIN -->
-    <div class="setup-grid">
-      <div class="team-setup">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h3>TIM A</h3>
-          <select id="groupSelectA" onchange="autoFillTeam('A', this.value)" style="font-size:0.75rem; padding:2px; border-radius:4px;"><option value="">-- Isi dari Pemetaan --</option></select>
-        </div>
-        <input type="text" id="teamAName" placeholder="Nama Tim A" style="margin-bottom:10px;" value="Tim A">
-        <div class="pos-input"><span>Pos 1</span><input type="text" id="in-A-p1" class="player-input"></div>
-        <div class="pos-input"><span>Pos 2</span><input type="text" id="in-A-p2" class="player-input"></div>
-        <div class="pos-input"><span>Pos 3</span><input type="text" id="in-A-p3" class="player-input"></div>
-        <div class="pos-input"><span>Pos 4</span><input type="text" id="in-A-p4" class="player-input"></div>
-        <div class="pos-input"><span>Pos 5</span><input type="text" id="in-A-p5" class="player-input"></div>
-        <div class="pos-input"><span>Pos 6</span><input type="text" id="in-A-p6" class="player-input"></div>
-      </div>
-      
-      <div class="team-setup">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <h3>TIM B</h3>
-          <select id="groupSelectB" onchange="autoFillTeam('B', this.value)" style="font-size:0.75rem; padding:2px; border-radius:4px;"><option value="">-- Isi dari Pemetaan --</option></select>
-        </div>
-        <input type="text" id="teamBName" placeholder="Nama Tim B" style="margin-bottom:10px;" value="Tim B">
-        <div class="pos-input"><span>Pos 1</span><input type="text" id="in-B-p1" class="player-input"></div>
-        <div class="pos-input"><span>Pos 2</span><input type="text" id="in-B-p2" class="player-input"></div>
-        <div class="pos-input"><span>Pos 3</span><input type="text" id="in-B-p3" class="player-input"></div>
-        <div class="pos-input"><span>Pos 4</span><input type="text" id="in-B-p4" class="player-input"></div>
-        <div class="pos-input"><span>Pos 5</span><input type="text" id="in-B-p5" class="player-input"></div>
-        <div class="pos-input"><span>Pos 6</span><input type="text" id="in-B-p6" class="player-input"></div>
-      </div>
-    </div>
-
-    <!-- PERANGKAT PERTANDINGAN -->
-    <div class="card" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
-      <h3 style="text-align: center; font-size: 0.95rem; margin: 0 0 10px 0; color: #475569;">PERANGKAT PERTANDINGAN</h3>
-      <div class="setup-grid" style="margin-bottom:0;">
-        <div class="pos-input"><span>Wasit Utama</span><input type="text" id="in-O-W1" class="player-input"></div>
-        <div class="pos-input"><span>Wasit 2 (Net)</span><input type="text" id="in-O-W2" class="player-input"></div>
-        <div class="pos-input"><span>Hakim Garis 1</span><input type="text" id="in-O-HG1" class="player-input"></div>
-        <div class="pos-input"><span>Hakim Garis 2</span><input type="text" id="in-O-HG2" class="player-input"></div>
-        <div class="pos-input"><span>Hakim Garis 3</span><input type="text" id="in-O-HG3" class="player-input"></div>
-        <div class="pos-input"><span>Hakim Garis 4</span><input type="text" id="in-O-HG4" class="player-input"></div>
-        <div class="pos-input" style="grid-column: 1 / -1;"><span>Pencatat Skor</span><input type="text" id="in-O-Scorer" class="player-input"></div>
-        <div class="pos-input"><span>Pelatih Tim A</span><input type="text" id="in-O-PelatihA" class="player-input"></div>
-        <div class="pos-input"><span>Pelatih Tim B</span><input type="text" id="in-O-PelatihB" class="player-input"></div>
-        <div class="pos-input"><span>Komentator</span><input type="text" id="in-O-Komentator" class="player-input"></div>
-        <div class="pos-input"><span>Tim Medis</span><input type="text" id="in-O-Medis" class="player-input"></div>
-      </div>
-    </div>
-
-    <button class="btn-danger" style="margin-top:10px; width: 100%;" onclick="resetAllPositions()">
-      <i class="fas fa-trash-alt"></i> KOSONGKAN SEMUA POSISI
-    </button>
-    <button class="btn-primary" style="margin-top:10px;" onclick="startAssessment()">
-      <i class="fas fa-whistle"></i> MULAI PERTANDINGAN
-    </button>
-  </div>
-
-  <!-- VIEW 2: LIVE ASSESSMENT -->
-  <div id="assessmentView" style="display:none;">
+    <div id="assessmentView" class="active-flex">
     <div style="background: #0f172a; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1);">
       <button style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: inherit;" onclick="returnToLK()">
         <i class="fas fa-arrow-left"></i> Buka LK
@@ -1338,9 +1307,9 @@
       <div style="width: 80px;"></div> <!-- spacer for centering -->
     </div>
     <div class="scoreboard">
-      <div class="team-score"><div class="name"><span id="sbNameA">TIM A</span> <span class="serve-indicator" id="serveA">🏐</span></div><div class="score-controls"><button class="score-btn" onclick="changeScore('A', -1)">-</button><div class="score-display" id="scoreA">0</div><button class="score-btn" onclick="changeScore('A', 1)">+</button></div></div>
+      <div class="team-score" onclick="setFirstServe('A')" style="cursor:pointer;" title="Klik untuk memegang servis"><div class="name"><span id="sbNameA">TIM A</span> <span class="serve-indicator" id="serveA">🏐</span></div><div class="score-controls" onclick="event.stopPropagation()"><button class="score-btn" onclick="changeScore('A', -1)">-</button><div class="score-display" id="scoreA">0</div><button class="score-btn" onclick="changeScore('A', 1)">+</button></div></div>
       <div class="score-divider">:</div>
-      <div class="team-score"><div class="name"><span id="sbNameB">TIM B</span> <span class="serve-indicator" id="serveB">🏐</span></div><div class="score-controls"><button class="score-btn" onclick="changeScore('B', -1)">-</button><div class="score-display" id="scoreB">0</div><button class="score-btn" onclick="changeScore('B', 1)">+</button></div></div>
+      <div class="team-score" onclick="setFirstServe('B')" style="cursor:pointer;" title="Klik untuk memegang servis"><div class="name"><span id="sbNameB">TIM B</span> <span class="serve-indicator" id="serveB">🏐</span></div><div class="score-controls" onclick="event.stopPropagation()"><button class="score-btn" onclick="changeScore('B', -1)">-</button><div class="score-display" id="scoreB">0</div><button class="score-btn" onclick="changeScore('B', 1)">+</button></div></div>
     </div>
 
     <div class="container">
@@ -1355,9 +1324,6 @@
           <button class="btn-rotate" style="position:static; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);" onclick="rotateTeamUndo('A')" title="Rotasi Mundur (Undo)"><i class="fas fa-undo"></i></button>
         </div>
         <div class="court-live">
-          <button style="position:absolute; top:10px; left:10px; z-index:20; background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:var(--primary); cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="SoundFX.click(); document.getElementById('manualOverlay').classList.add('active'); document.getElementById('manualMenu').classList.add('active');"><i class="fas fa-cog"></i> Manual</button>
-          <button style="position:absolute; top:10px; right:10px; z-index:20; background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:var(--primary); cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="SoundFX.click(); openAddRoleModal();"><i class="fas fa-plus"></i> Peran</button>
-          
           <!-- TOMBOL STRATEGI -->
           <div style="position:absolute; top:10px; left:50%; transform: translateX(-50%); z-index:30; display:flex; gap: 8px;">
             <button id="btnStrategy" style="background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:#f59e0b; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="toggleStrategyMode()"><i class="fas fa-pencil-alt"></i> Strategi</button>
@@ -1373,9 +1339,15 @@
           </div>
         </div>
       </div>
-      <div class="fab-container">
+      <div class="fab-container" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 600px;">
+        <button class="btn-save-all" style="background: white; color: #4f46e5; border: 2px solid #4f46e5; padding: 10px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onclick="SoundFX.click(); document.getElementById('manualOverlay').classList.add('active'); document.getElementById('manualMenu').classList.add('active');">
+          <i class="fas fa-cog"></i> MANUAL
+        </button>
         <button class="btn-save-all" id="btnSubmitAll" onclick="saveToOfflineStorage()">
-          <i class="fas fa-save"></i> SIMPAN PERTANDINGAN (OFFLINE)
+          <i class="fas fa-save"></i> SIMPAN (OFFLINE)
+        </button>
+        <button class="btn-save-all" style="background: white; color: #4f46e5; border: 2px solid #4f46e5; padding: 10px 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" onclick="SoundFX.click(); openAddRoleModal();">
+          <i class="fas fa-plus"></i> PERAN
         </button>
       </div>
     </div>
@@ -1483,22 +1455,82 @@
   <div class="custom-tooltip" id="customTooltip"></div>
   <div class="toast" id="toast">Berhasil!</div>
 
-  <!-- MODAL TINDAKAN MANUAL -->
+  <!-- MODAL PENGATURAN MANUAL & FORMASI -->
   <div class="bottom-sheet-overlay" id="manualOverlay" onclick="closeManualMenu()"></div>
-  <div class="bottom-sheet" id="manualMenu">
-    <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div class="sheet-title">Tindakan Manual / Set 2</div>
-      <button class="btn-close-modal" onclick="closeManualMenu()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+  <div class="editor-modal" id="manualMenu" style="height: 90vh; width: 95vw; max-width: 1000px; display: flex; flex-direction: column; background: #f8fafc; overflow: hidden; padding: 0;">
+    <div class="modal-header-bar" style="background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0;">
+      <div class="modal-title-text" style="color: var(--primary);"><i class="fas fa-cog"></i> Pengaturan Manual & Formasi</div>
+      <button class="btn-close-modal" onclick="closeManualMenu()"><i class="fas fa-times"></i></button>
     </div>
-    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeam('A');"><i class="fas fa-redo"></i> Rotasi Tim A (Maju)</button>
-    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeamUndo('A');"><i class="fas fa-undo"></i> Undo Rotasi Tim A (Mundur)</button>
-    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeam('B');"><i class="fas fa-redo"></i> Rotasi Tim B (Maju)</button>
-    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeamUndo('B');"><i class="fas fa-undo"></i> Undo Rotasi Tim B (Mundur)</button>
-    <hr style="border:0; border-top:1px solid #e2e8f0; margin:15px 0;">
-    <button class="btn-secondary" onclick="SoundFX.click(); toggleCourtSide();"><i class="fas fa-exchange-alt"></i> Tukar Lapangan Sisi Visual</button>
-    <button class="btn-secondary" onclick="SoundFX.click(); resetScore();"><i class="fas fa-eraser"></i> Setel Ulang Skor (0-0)</button>
-    <button class="btn-primary" style="margin-top:15px;" onclick="SoundFX.click(); beginSetTwo();"><i class="fas fa-users-cog"></i> GANTI FORMASI / MULAI SET 2</button>
+    
+    <div style="flex: 1; overflow-y: auto; padding: 15px;">
+      <!-- KONTROL MANUAL CEPAT -->
+      <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+        <button class="btn-secondary" style="flex:1;" onclick="SoundFX.click(); rotateTeam('A');"><i class="fas fa-redo"></i> Rotasi Tim A</button>
+        <button class="btn-secondary" style="flex:1;" onclick="SoundFX.click(); rotateTeam('B');"><i class="fas fa-redo"></i> Rotasi Tim B</button>
+        <button class="btn-secondary" style="flex:1;" onclick="SoundFX.click(); toggleCourtSide();"><i class="fas fa-exchange-alt"></i> Tukar Lap</button>
+        <button class="btn-secondary" style="flex:1; color:#ef4444;" onclick="SoundFX.click(); resetScore();"><i class="fas fa-eraser"></i> Reset Skor</button>
+      </div>
+      <hr style="border:0; border-top:1px dashed #cbd5e1; margin:15px 0;">
+
+      <!-- SETUP PEMAIN & PERANGKAT -->
+      <div id="setupView">
+        <div class="setup-grid">
+          <div class="team-setup">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3>TIM A</h3>
+              <select id="groupSelectA" onchange="autoFillTeam('A', this.value)" style="font-size:0.75rem; padding:2px; border-radius:4px;"><option value="">-- Isi dari Pemetaan --</option></select>
+            </div>
+            <input type="text" id="teamAName" placeholder="Nama Tim A" style="margin-bottom:10px;" value="Tim A">
+            <div class="pos-input"><span>Pos 1</span><input type="text" id="in-A-p1" class="player-input"></div>
+            <div class="pos-input"><span>Pos 2</span><input type="text" id="in-A-p2" class="player-input"></div>
+            <div class="pos-input"><span>Pos 3</span><input type="text" id="in-A-p3" class="player-input"></div>
+            <div class="pos-input"><span>Pos 4</span><input type="text" id="in-A-p4" class="player-input"></div>
+            <div class="pos-input"><span>Pos 5</span><input type="text" id="in-A-p5" class="player-input"></div>
+            <div class="pos-input"><span>Pos 6</span><input type="text" id="in-A-p6" class="player-input"></div>
+          </div>
+          
+          <div class="team-setup">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3>TIM B</h3>
+              <select id="groupSelectB" onchange="autoFillTeam('B', this.value)" style="font-size:0.75rem; padding:2px; border-radius:4px;"><option value="">-- Isi dari Pemetaan --</option></select>
+            </div>
+            <input type="text" id="teamBName" placeholder="Nama Tim B" style="margin-bottom:10px;" value="Tim B">
+            <div class="pos-input"><span>Pos 1</span><input type="text" id="in-B-p1" class="player-input"></div>
+            <div class="pos-input"><span>Pos 2</span><input type="text" id="in-B-p2" class="player-input"></div>
+            <div class="pos-input"><span>Pos 3</span><input type="text" id="in-B-p3" class="player-input"></div>
+            <div class="pos-input"><span>Pos 4</span><input type="text" id="in-B-p4" class="player-input"></div>
+            <div class="pos-input"><span>Pos 5</span><input type="text" id="in-B-p5" class="player-input"></div>
+            <div class="pos-input"><span>Pos 6</span><input type="text" id="in-B-p6" class="player-input"></div>
+          </div>
+        </div>
+
+        <div class="card" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+          <h3 style="text-align: center; font-size: 0.95rem; margin: 0 0 10px 0; color: #475569;">PERANGKAT PERTANDINGAN</h3>
+          <div class="setup-grid" style="margin-bottom:0;">
+            <div class="pos-input"><span>Wasit Utama</span><input type="text" id="in-O-W1" class="player-input"></div>
+            <div class="pos-input"><span>Wasit 2 (Net)</span><input type="text" id="in-O-W2" class="player-input"></div>
+            <div class="pos-input"><span>Hakim Garis 1</span><input type="text" id="in-O-HG1" class="player-input"></div>
+            <div class="pos-input"><span>Hakim Garis 2</span><input type="text" id="in-O-HG2" class="player-input"></div>
+            <div class="pos-input"><span>Hakim Garis 3</span><input type="text" id="in-O-HG3" class="player-input"></div>
+            <div class="pos-input"><span>Hakim Garis 4</span><input type="text" id="in-O-HG4" class="player-input"></div>
+            <div class="pos-input" style="grid-column: 1 / -1;"><span>Pencatat Skor</span><input type="text" id="in-O-Scorer" class="player-input"></div>
+            <div class="pos-input"><span>Pelatih Tim A</span><input type="text" id="in-O-PelatihA" class="player-input"></div>
+            <div class="pos-input"><span>Pelatih Tim B</span><input type="text" id="in-O-PelatihB" class="player-input"></div>
+            <div class="pos-input"><span>Komentator</span><input type="text" id="in-O-Komentator" class="player-input"></div>
+            <div class="pos-input"><span>Tim Medis</span><input type="text" id="in-O-Medis" class="player-input"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 15px; background: white; border-top: 1px solid #e2e8f0; flex-shrink: 0; display:flex; gap:10px;">
+      <button class="btn-danger" style="margin: 0; flex:1;" onclick="resetAllPositions()">
+        <i class="fas fa-trash-alt"></i> KOSONGKAN
+      </button>
+      <button class="btn-primary" style="margin: 0; flex:2;" onclick="startAssessment(false)">
+        <i class="fas fa-check"></i> SIMPAN DAN TERAPKAN FORMASI
+      </button>
+    </div>
   </div>
 
   <!-- MODAL SUBSTITUSI -->
@@ -1570,9 +1602,9 @@
       document.getElementById('tabAnalisis').classList.toggle('active-tab', tab === 'analisis');
       document.getElementById('tabSimulasi').classList.toggle('active-tab', tab === 'simulasi');
       
-      // Auto-hide header (re-enter live mode) jika match sedang berjalan dan kita buka tab Simulasi
-      if (tab === 'simulasi' && document.getElementById('assessmentView').classList.contains('active-flex')) {
+      if (tab === 'simulasi') {
         document.body.classList.add('live-mode');
+        startAssessment(true); // Mulai secara silent untuk render pemain dari localStorage
       } else {
         document.body.classList.remove('live-mode');
       }
@@ -1626,6 +1658,7 @@
 
     function openDatabaseModal() { document.getElementById('dbOverlay').classList.add('active'); document.getElementById('dbModal').classList.add('active'); }
     function closeDatabaseModal() { document.getElementById('dbOverlay').classList.remove('active'); document.getElementById('dbModal').classList.remove('active'); }
+    function closeManualMenu() { document.getElementById('manualOverlay').classList.remove('active'); document.getElementById('manualMenu').classList.remove('active'); }
 
     let savedClasses = {}; // Object untuk menyimpan daftar kelas-kelas (Kunci: Nama Kelas, Value: Array Murid)
 
@@ -2026,13 +2059,13 @@
       showToast("Semua posisi dikosongkan");
     }
 
-    function startAssessment() {
+    function startAssessment(silent = false) {
       nameTeamA = document.getElementById('teamAName').value.trim() || 'Tim A'; nameTeamB = document.getElementById('teamBName').value.trim() || 'Tim B';
       document.getElementById('sbNameA').innerText = nameTeamA; document.getElementById('sbNameB').innerText = nameTeamB;
 
       allParticipants = []; const posIds = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
-      posIds.forEach((p, idx) => { const n = document.getElementById('in-A-'+p).value.trim(); if(n) allParticipants.push(createParticipant(`A_${idx}`, n, 'player', nameTeamA, `pos-A_${p}`)); });
-      posIds.forEach((p, idx) => { const n = document.getElementById('in-B-'+p).value.trim(); if(n) allParticipants.push(createParticipant(`B_${idx}`, n, 'player', nameTeamB, `pos-B_${p}`)); });
+      posIds.forEach((p, idx) => { let n = document.getElementById('in-A-'+p).value.trim(); if(!n) n = `${p.replace('p','')}`; allParticipants.push(createParticipant(`A_${idx}`, n, 'player', nameTeamA, `pos-A_${p}`)); });
+      posIds.forEach((p, idx) => { let n = document.getElementById('in-B-'+p).value.trim(); if(!n) n = `${p.replace('p','')}`; allParticipants.push(createParticipant(`B_${idx}`, n, 'player', nameTeamB, `pos-B_${p}`)); });
       
       const officials = [
         { idIn: 'W1', posClass: 'pos-W1', roleName: 'Wasit Utama' }, { idIn: 'W2', posClass: 'pos-W2', roleName: 'Wasit 2' },
@@ -2044,24 +2077,31 @@
       ];
       officials.forEach((off, idx) => { const n = document.getElementById('in-O-'+off.idIn).value.trim(); if(n) allParticipants.push(createParticipant(`O_${idx}`, n, 'official', off.roleName, off.posClass)); });
 
-      if(allParticipants.length === 0) return showToast('Minimal isi 1 anak!');
+      // Minimal pemain tidak diperlukan lagi karena otomatis terisi placeholder
 
-      const serveInput = prompt(`Siapa yang memegang servis pertama? Ketik 'A' untuk ${nameTeamA} atau 'B' untuk ${nameTeamB}:`, "A");
-      currentServe = (serveInput && serveInput.toUpperCase() === 'B') ? 'B' : 'A';
-      updateServeIndicator();
 
-      SoundFX.whistle(); // BUNYIKAN PELUIT SAAT MULAI PERTANDINGAN
+      if (!silent) {
+        const serveInput = prompt(`Siapa yang memegang servis pertama? Ketik 'A' untuk ${nameTeamA} atau 'B' untuk ${nameTeamB}:`, "A");
+        currentServe = (serveInput && serveInput.toUpperCase() === 'B') ? 'B' : 'A';
+        updateServeIndicator();
+        SoundFX.whistle();
+        showToast("Formasi diterapkan!");
+        closeManualMenu();
+      }
 
-      document.body.classList.add('live-mode');
-      document.getElementById('setupView').style.display = 'none'; 
-      document.getElementById('assessmentView').classList.add('active-flex');
-      
       buildDOMNodesOnce();
     }
 
     function updateServeIndicator() {
       document.getElementById('serveA').classList.toggle('active', currentServe === 'A');
       document.getElementById('serveB').classList.toggle('active', currentServe === 'B');
+    }
+
+    function setFirstServe(team) {
+      currentServe = team;
+      updateServeIndicator();
+      SoundFX.click();
+      showToast(`Bola pertama diservis oleh ${team === 'A' ? nameTeamA : nameTeamB}`);
     }
 
     function createParticipant(idStr, fullName, roleType, teamOrRoleLabel, initialPosClass) { 
@@ -2078,7 +2118,7 @@
       allParticipants.forEach(p => {
         const baseClass = p.role === 'official' ? 'player-node official' : (p.currentPosClass.includes('pos-B') ? 'player-node teamB' : 'player-node teamA');
         const critLength = p.role === 'player' ? criteriaPlayer.length : criteriaOfficial.length;
-        html += `<div id="${p.id}" class="${baseClass} ${p.currentPosClass}" onclick="SoundFX.click(); openScoringSheet('${p.id}')">
+        html += `<div id="${p.id}" class="${baseClass} ${p.currentPosClass}" title="${p.team} - ${p.name}" onclick="SoundFX.click(); openScoringSheet('${p.id}')">
             <div class="name">${p.shortName}</div><div class="progress" id="prog-${p.id}">0/${critLength}</div>
           </div>`;
       });
@@ -2445,9 +2485,9 @@
         document.getElementById('scoreB').innerText = '0';
         
         // Kembali ke Setup View (Nama pemain di input tetap ada)
-        document.body.classList.remove('live-mode');
-        document.getElementById('setupView').style.display = 'block'; 
-        document.getElementById('assessmentView').classList.remove('active-flex');
+        // Tetap di lapangan, tapi buka menu manual untuk penyesuaian jika perlu
+        document.getElementById('manualOverlay').classList.add('active'); 
+        document.getElementById('manualMenu').classList.add('active');
         
         checkUsedChips();
         window.scrollTo({ top: 0, behavior: 'smooth' });
