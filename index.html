@@ -1,0 +1,2733 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lembar Kerja Bola Voli Fase E</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800&family=DotGothic16&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    /* MAIN TABS */
+    /* MAIN TABS */
+    .app-top {
+      background: var(--surface);
+      padding: 16px 16px 10px;
+    }
+    body.live-mode .app-top { display: none; }
+    .app-top h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .main-header {
+      background: var(--surface);
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-bottom: 1px solid #e2e8f0;
+    }
+    body.live-mode .main-header { display: none; }
+    .main-tabs {
+      display: flex;
+      gap: 15px;
+    }
+    .main-tab-btn {
+      flex: 1;
+      padding: 12px 10px;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #64748b;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .main-tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    .main-tab-content {
+      display: none;
+    }
+    .main-tab-content.active-tab {
+      display: block;
+    }
+    :root {
+      --primary: #4f46e5; 
+      --primary-hover: #4338ca;
+      --primary-light: #eef2ff;
+      --bg: #f1f5f9; 
+      --surface: #ffffff;
+      --text-main: #0f172a; 
+      --text-muted: #64748b;
+      --success: #10b981; 
+      --danger: #ef4444; 
+      --warning: #f59e0b;
+      --court-out: #2563eb; 
+      --court-in: #f97316; 
+      --net-color: #ffffff;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.08);
+      --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.12);
+      --shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.2);
+    }
+    
+    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background: var(--bg); 
+      margin: 0; 
+      color: var(--text-main); 
+      padding-bottom: 90px; 
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    h1, h2, h3, h4, .brand-text, .sheet-title {
+      font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    /* MODE LIVE SATU LAYAR (Tanpa Scroll) */
+    body.live-mode { padding-bottom: 0; overflow: hidden; height: 100vh; height: 100dvh; }
+    #assessmentView.active-flex { display: flex !important; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden; }
+    #assessmentView > .container { flex: 1; display: flex; flex-direction: column; padding: 10px 15px; margin: 0 auto; width: 100%; max-width: 1200px; box-sizing: border-box; }
+    #assessmentView .brand-text { margin: 4px 0; font-size: 0.95rem; flex-shrink: 0; }
+    #assessmentView .court-live-wrapper { flex: 1; display: flex; flex-direction: column; margin: 4px 0 8px 0; min-height: 0; }
+    #assessmentView .court-live { flex: 1; height: auto !important; min-height: 0 !important; max-height: none !important; }
+    #assessmentView .fab-container { position: static; padding: 0; margin-bottom: 5px; flex-shrink: 0; align-self: center; transform: none; display: flex; justify-content: center; width: 100%; }
+
+    /* SCOREBOARD */
+    .scoreboard { 
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); 
+      padding: 10px 16px; 
+      position: sticky; 
+      top: 0; 
+      z-index: 100; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.4); 
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .team-score { display: flex; flex-direction: column; align-items: center; width: 42%; }
+    .team-score .name { 
+      color: #cbd5e1; 
+      font-size: 0.78rem; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      letter-spacing: 0.05em;
+      margin-bottom: 6px; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      width: 100%; 
+      text-align: center;
+    }
+    .serve-indicator { font-size: 0.85rem; margin-left: 4px; opacity: 0; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); transform: scale(0.7); display: inline-block; }
+    .serve-indicator.active { opacity: 1; transform: scale(1); }
+    .score-controls { display: flex; align-items: center; gap: 8px; }
+    .score-btn { 
+      background: #334155; 
+      color: white; 
+      border: 1px solid rgba(255,255,255,0.1); 
+      width: 34px; 
+      height: 34px; 
+      border-radius: var(--radius-sm); 
+      font-weight: 700; 
+      font-size: 1.1rem;
+      cursor: pointer; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .score-btn:active { background: #475569; transform: scale(0.92); }
+    .score-display { 
+      font-family: 'DotGothic16', monospace; 
+      font-size: 2.2rem; 
+      color: #fbbf24; 
+      background: #020617; 
+      padding: 2px 12px; 
+      border-radius: 8px; 
+      min-width: 54px; 
+      text-align: center; 
+      border: 1px solid #334155;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.8);
+      letter-spacing: 2px;
+    }
+    .score-divider { color: #64748b; font-size: 1.5rem; font-weight: 800; }
+
+    .container { padding: 16px; max-width: 1200px; width: 100%; margin: 0 auto; box-sizing: border-box; }
+    .card { 
+      background: var(--surface); 
+      border-radius: var(--radius-lg); 
+      padding: 18px; 
+      box-shadow: var(--shadow-sm); 
+      margin-bottom: 16px; 
+      border: 1px solid #e2e8f0; 
+      transition: box-shadow 0.2s ease;
+    }
+    .card:hover { box-shadow: var(--shadow-md); }
+    
+    h2 { 
+      font-size: 1.2rem; 
+      font-weight: 800;
+      text-align: center; 
+      margin-top: 0; 
+      border-bottom: 2px solid #f1f5f9; 
+      padding-bottom: 12px; 
+      color: #0f172a;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .form-group { margin-bottom: 14px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.85rem; color: #334155; }
+    input[type="text"] { 
+      width: 100%; 
+      padding: 11px 14px; 
+      border: 1.5px solid #cbd5e1; 
+      border-radius: var(--radius-md); 
+      box-sizing: border-box; 
+      font-size: 0.95rem; 
+      font-weight: 500;
+      color: #0f172a;
+      background: #ffffff;
+      transition: all 0.2s ease;
+    }
+    input[type="text"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      outline: none;
+    }
+    
+    .btn-primary { 
+      width: 100%; 
+      padding: 14px 18px; 
+      background: linear-gradient(135deg, #4f46e5 0%, #4338ca 100%); 
+      color: white; 
+      border: none; 
+      border-radius: var(--radius-md); 
+      font-size: 0.95rem; 
+      font-weight: 700; 
+      cursor: pointer; 
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35); 
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-primary:active { transform: translateY(1px) scale(0.98); box-shadow: 0 2px 6px rgba(79, 70, 229, 0.3); }
+    .btn-secondary { 
+      width: 100%; 
+      padding: 12px 16px; 
+      background: #f1f5f9; 
+      color: #334155; 
+      border: 1px solid #cbd5e1; 
+      border-radius: var(--radius-md); 
+      font-size: 0.9rem; 
+      font-weight: 600; 
+      cursor: pointer; 
+      margin-top: 10px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover { background: #e2e8f0; color: #0f172a; }
+    .btn-secondary:active { background: #cbd5e1; transform: scale(0.98); }
+    .btn-danger {
+      background: #fef2f2;
+      color: #dc2626;
+      border: 1px solid #fca5a5;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .btn-danger:active { background: #fee2e2; transform: scale(0.98); }
+    .btn-cloud { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: white; margin-bottom: 15px; border: none; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3); }
+
+    /* SETUP GRID */
+    .setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px;}
+    .team-setup { background: #f8fafc; padding: 12px; border-radius: var(--radius-md); border: 1px solid #e2e8f0; }
+    .team-setup h3 { text-align: center; font-size: 0.95rem; font-weight: 700; margin: 0 0 10px 0; color: var(--primary); letter-spacing: 0.02em; }
+    .pos-input { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
+    .pos-input span { font-size: 0.7rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.03em; }
+    .pos-input input { padding: 8px; font-size: 0.85rem; border-radius: var(--radius-sm); border: 1.5px solid #e2e8f0; transition: all 0.2s; }
+    .pos-input input:focus, .pos-input input.active-input { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.18); background: #eff6ff; outline: none; }
+    
+    .roster-pool { 
+      background: white; 
+      padding: 14px; 
+      border-radius: var(--radius-lg); 
+      border: 1px solid #cbd5e1; 
+      margin-bottom: 16px; 
+      box-shadow: var(--shadow-md); 
+      position: sticky; 
+      top: 10px; 
+      z-index: 50; 
+      max-height: 42vh; 
+      overflow-y: auto; 
+    }
+    .roster-title { font-size: 0.88rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center;}
+    .roster-subtitle { font-size: 0.72rem; color: #64748b; margin-bottom: 12px; }
+    .chip-container { display: flex; flex-wrap: wrap; gap: 6px; }
+    .student-chip { 
+      padding: 6px 12px; 
+      background: #f1f5f9; 
+      border: 1px solid #cbd5e1; 
+      border-radius: 20px; 
+      font-size: 0.8rem; 
+      font-weight: 600; 
+      color: #334155; 
+      cursor: pointer; 
+      user-select: none; 
+      transition: all 0.15s ease; 
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .student-chip:hover { background: #e0e7ff; color: var(--primary); border-color: #a5b4fc; }
+    .student-chip:active { transform: scale(0.94); }
+    .student-chip.used { opacity: 0.4; background: #e2e8f0; pointer-events: none; text-decoration: line-through; border-color: #cbd5e1; }
+
+    /* FULL COURT LIVE VIEW */
+    .court-live-wrapper { position: relative; margin: 15px 0 65px 0; }
+    .court-live {
+      background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%); 
+      padding: 16px 36px; 
+      border-radius: var(--radius-lg);
+      position: relative; 
+      box-shadow: 0 10px 30px rgba(29, 78, 216, 0.35);
+      height: calc(100vh - 210px); height: calc(100dvh - 210px);
+      min-height: 480px; max-height: 800px;
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .court-inner { 
+      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%); 
+      flex: 1; 
+      border: 3px solid #ffffff; 
+      position: relative; 
+      display: flex; 
+      flex-direction: column; 
+      border-radius: 4px;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.25);
+    }
+    
+    .half-court { flex: 1; position: relative; display: flex; align-items: center; justify-content: center;}
+    .court-label { font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 900; color: rgba(255,255,255,0.18); letter-spacing: 6px; text-transform: uppercase; user-select: none; pointer-events: none; }
+    
+    .half-court.top { border-bottom: 4px solid var(--net-color); }
+    .attack-line-top { position: absolute; bottom: 33%; left: 0; right: 0; border-bottom: 2px dashed rgba(255,255,255,0.75); }
+    .attack-line-bot { position: absolute; top: 33%; left: 0; right: 0; border-top: 2px dashed rgba(255,255,255,0.75); }
+    .net-marker { position: absolute; top: 50%; left: -10px; right: -10px; height: 12px; background: rgba(255,255,255,0.3); transform: translateY(-50%); z-index: 1; border-top: 2px solid white; border-bottom: 2px solid white; backdrop-filter: blur(2px); }
+
+    .btn-rotate { 
+      position: absolute; 
+      right: -12px; 
+      z-index: 10; 
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+      color: white; 
+      border: 2px solid white; 
+      border-radius: 50%; 
+      width: 42px; 
+      height: 42px; 
+      font-size: 1.1rem; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3); 
+      cursor: pointer; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      transition: all 0.2s ease;
+    }
+    .btn-rotate:hover { transform: scale(1.08); }
+    .btn-rotate:active { transform: scale(0.92); }
+    .rotate-top { top: 20%; }
+    .rotate-bot { bottom: 20%; }
+
+    /* NODE CSS (Transisi Animasi) */
+    #courtNodes { position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 5; pointer-events: none; }
+    .player-node {
+      position: absolute; 
+      width: 68px; 
+      height: 55px; 
+      background: white; 
+      border-radius: 28px;
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      justify-content: center;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.35); 
+      cursor: pointer; 
+      pointer-events: all;
+      transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.15s ease, border-color 0.3s ease;
+      transform: translate(-50%, -50%); 
+      border: 3px solid var(--danger);
+    }
+    .player-node:hover { transform: translate(-50%, -50%) scale(1.05); }
+    .player-node:active { transform: translate(-50%, -50%) scale(0.92); }
+    .player-node .name { font-size: 0.68rem; font-weight: 700; color: #0f172a; text-align: center; width: 58px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .player-node .progress { font-size: 0.58rem; color: white; background: var(--danger); padding: 1px 6px; border-radius: 10px; margin-top: 2px; font-weight: 800; letter-spacing: 0.02em; }
+    .player-node.teamB { background: #f8fafc; }
+    .player-node.official { background: #1e293b; color: white; border-radius: 10px; width: 62px; height: 36px; border: 3px solid var(--danger); box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
+    .player-node.official .name { color: white; font-size: 0.65rem; }
+    .player-node.official .progress { display: none; }
+    
+    /* COMPLETE STATES */
+    .player-node.complete { border-color: var(--success); }
+    .player-node.complete .progress { background: var(--success); }
+    .player-node.official.complete { border-color: var(--success); }
+    
+    .badge-icon { position: absolute; top: -8px; right: -8px; font-size: 0.95rem; background: white; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.25); width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; }
+    .brand-text { text-align: center; font-family: 'Outfit', sans-serif; font-size: 1.05rem; font-weight: 800; color: #64748b; letter-spacing: 3px; text-transform: uppercase; margin: 16px 0 8px; text-shadow: 1px 1px 0px white; }
+
+    /* KELAS POSISI NORMAL */
+    .pos-B_p1 { top: 15%; left: 20%; } .pos-B_p6 { top: 15%; left: 50%; } .pos-B_p5 { top: 15%; left: 80%; }
+    .pos-B_p2 { top: 35%; left: 20%; } .pos-B_p3 { top: 35%; left: 50%; } .pos-B_p4 { top: 35%; left: 80%; }
+    .pos-A_p4 { top: 65%; left: 20%; } .pos-A_p3 { top: 65%; left: 50%; } .pos-A_p2 { top: 65%; left: 80%; }
+    .pos-A_p5 { top: 85%; left: 20%; } .pos-A_p6 { top: 85%; left: 50%; } .pos-A_p1 { top: 85%; left: 80%; }
+    
+    /* KELAS POSISI KETIKA TUKAR LAPANGAN (SWAPPED) */
+    .court-inner.swapped .pos-A_p2 { top: 35%; left: 20%; } .court-inner.swapped .pos-A_p3 { top: 35%; left: 50%; } .court-inner.swapped .pos-A_p4 { top: 35%; left: 80%; }
+    .court-inner.swapped .pos-A_p1 { top: 15%; left: 20%; } .court-inner.swapped .pos-A_p6 { top: 15%; left: 50%; } .court-inner.swapped .pos-A_p5 { top: 15%; left: 80%; }
+    .court-inner.swapped .pos-B_p4 { top: 65%; left: 20%; } .court-inner.swapped .pos-B_p3 { top: 65%; left: 50%; } .court-inner.swapped .pos-B_p2 { top: 65%; left: 80%; }
+    .court-inner.swapped .pos-B_p5 { top: 85%; left: 20%; } .court-inner.swapped .pos-B_p6 { top: 85%; left: 50%; } .court-inner.swapped .pos-B_p1 { top: 85%; left: 80%; }
+    
+    .pos-W1 { top: 50%; left: -2%; }   
+    .pos-W2 { top: 50%; left: 102%; }  
+    .pos-HG1 { top: -2%; left: -2%; }  
+    .pos-HG2 { top: -2%; left: 102%; } 
+    .pos-HG3 { top: 102%; left: -2%; } 
+    .pos-HG4 { top: 102%; left: 102%;} 
+    .pos-Scorer { top: 50%; left: -18%; }
+    .pos-PelatihA { top: 75%; left: -18%; }
+    .pos-PelatihB { top: 25%; left: -18%; }
+    .pos-Komentator { top: 25%; left: 118%; }
+    .pos-Medis { top: 75%; left: 118%; }
+
+    /* GROUPING MODAL SYSTEM */
+    .target-pill { padding: 6px 16px; border-radius: 20px; border: 1px solid #cbd5e1; background: white; color: #475569; font-weight: 600; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+    .target-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+    .target-pill .badge { background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 10px; font-size: 0.7rem; }
+    .target-pill.active .badge { background: rgba(255,255,255,0.2); color: white; }
+    .student-group-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 15px; cursor: pointer; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: all 0.2s; position: relative; overflow: hidden; }
+    .student-group-card:hover { border-color: var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .student-group-card.assigned { border-color: #10b981; background: #f0fdf4; }
+    .student-group-card .num { position: absolute; top: 10px; left: 10px; font-size: 0.7rem; color: #94a3b8; font-weight: 700; }
+    .student-group-card .name { margin-top: 10px; font-weight: 700; font-size: 0.95rem; color: #1e293b; line-height: 1.3; }
+    .student-group-card .group-badge { align-self: flex-start; background: #f1f5f9; color: #64748b; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .student-group-card.assigned .group-badge { background: #10b981; color: white; }
+
+    /* BOTTOM SHEET & MODAL SYSTEM */
+    .bottom-sheet-overlay { 
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+      background: rgba(15, 23, 42, 0.65); 
+      backdrop-filter: blur(4px);
+      z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; 
+    }
+    .bottom-sheet-overlay.active { opacity: 1; pointer-events: all; }
+    
+    .bottom-sheet { 
+      position: fixed; bottom: -100%; left: 0; right: 0; 
+      background: #ffffff; 
+      border-radius: 24px 24px 0 0; 
+      padding: 16px 18px 28px; 
+      z-index: 1001; 
+      transition: bottom 0.35s cubic-bezier(0.16, 1, 0.3, 1); 
+      box-shadow: 0 -8px 32px rgba(15, 23, 42, 0.25); 
+      max-height: 85vh; 
+      overflow-y: auto; 
+    }
+    .bottom-sheet.active { bottom: 0; }
+    
+    .editor-modal { 
+      position: fixed; top: 50%; left: 50%; 
+      transform: translate(-50%, -50%) scale(0.94); 
+      background: #ffffff; 
+      width: 92%; max-width: 520px; 
+      height: 85vh; 
+      z-index: 1002; 
+      border-radius: var(--radius-lg); 
+      padding: 20px; 
+      opacity: 0; pointer-events: none; 
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
+      display: flex; flex-direction: column; 
+      box-shadow: var(--shadow-lg);
+    }
+    .editor-modal.active { opacity: 1; transform: translate(-50%, -50%) scale(1); pointer-events: all; }
+    
+    /* MODAL HEADER & PROPORTIONAL CLOSE BUTTON (X) */
+    .modal-header-bar, .sheet-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      margin-bottom: 14px; 
+      border-bottom: 1.5px solid #f1f5f9; 
+      padding-bottom: 12px;
+      position: relative;
+    }
+    .modal-title-text, .sheet-title { 
+      font-size: 1.05rem; 
+      font-weight: 700; 
+      color: #0f172a; 
+      display: flex; 
+      flex-direction: column;
+    }
+    .sheet-subtitle { font-size: 0.76rem; color: #64748b; font-weight: 500; margin-top: 2px;}
+    
+    .btn-close-modal {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+    }
+    .btn-close-modal:hover {
+      background: #fee2e2;
+      color: #ef4444;
+      border-color: #fca5a5;
+      transform: rotate(90deg);
+    }
+    .btn-close-modal:active { transform: scale(0.9); }
+
+    .editor-content { flex: 1; overflow-y: auto; margin: 12px 0; padding-right: 5px;}
+    .editor-group { background: #f8fafc; border: 1.5px solid #e2e8f0; padding: 12px; border-radius: var(--radius-md); margin-bottom: 14px; position: relative;}
+    .editor-group label { font-size: 0.8rem; font-weight: 600; color: #475569; }
+    .editor-group input { border: 1.5px solid #cbd5e1; padding: 8px 10px; font-size: 0.9rem; font-weight: 700; background: white; border-radius: var(--radius-sm); }
+    .editor-group textarea { width: 100%; border: 1.5px solid #cbd5e1; border-radius: var(--radius-sm); padding: 8px; font-size: 0.82rem; font-family: inherit; margin-top: 6px; resize: vertical; min-height: 42px; box-sizing: border-box; }
+    .btn-remove-crit { position: absolute; top: 12px; right: 12px; background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5; border-radius: 6px; cursor: pointer; padding: 4px 8px; font-size: 0.8rem; transition: all 0.15s; }
+    .btn-remove-crit:hover { background: #ef4444; color: white; }
+
+    .status-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .status-item { padding: 10px 12px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; border: 1.5px solid #e2e8f0; }
+    .status-item.done { background: #ecfdf5; color: #047857; border-color: #a7f3d0; }
+    .status-item.wait { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+
+    .tab-container { display: flex; gap: 8px; margin-bottom: 12px; background: #f1f5f9; padding: 4px; border-radius: var(--radius-md); }
+    .tab-btn { flex: 1; padding: 9px 12px; background: transparent; border: none; border-radius: var(--radius-sm); font-weight: 700; font-size: 0.85rem; color: #64748b; cursor: pointer; transition: all 0.2s ease; }
+    .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+
+    .sheet-handle { width: 44px; height: 5px; background: #cbd5e1; border-radius: 3px; margin: 0 auto 12px; }
+    .btn-substitute { background: #fee2e2; color: var(--danger); border: 1px solid #fca5a5; padding: 7px 14px; border-radius: var(--radius-sm); font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+    .btn-substitute:active { transform: scale(0.95); }
+
+    .crit-row { margin-bottom: 12px; background: #f8fafc; border-radius: var(--radius-md); padding: 12px; border: 1px solid #e2e8f0; }
+    .crit-name { font-weight: 700; font-size: 0.88rem; margin-bottom: 8px; color: #1e293b; display: flex; justify-content: space-between; align-items: center;}
+    .score-btns { display: flex; gap: 6px; }
+    .s-btn { flex: 1; padding: 10px 0; background: white; border: 2px solid #cbd5e1; border-radius: var(--radius-sm); font-weight: 800; font-size: 1.05rem; color: #475569; cursor: pointer; transition: all 0.15s ease; display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
+    .s-btn span { font-size: 0.58rem; font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .s-btn.selected { background: var(--primary); color: white; border-color: var(--primary); box-shadow: 0 3px 10px rgba(79, 70, 229, 0.3); }
+    .s-btn.selected span { color: #e0e7ff; }
+
+    .tooltip-icon { color: var(--primary); font-size: 1.15rem; cursor: pointer; transition: transform 0.15s; }
+    .tooltip-icon:hover { transform: scale(1.15); }
+    .custom-tooltip { display: none; position: fixed; background: #0f172a; color: white; padding: 14px 16px; border-radius: var(--radius-md); font-size: 0.82rem; width: 82%; max-width: 320px; z-index: 2000; box-shadow: var(--shadow-lg); left: 50%; transform: translateX(-50%); top: 38%; line-height: 1.5; border: 1px solid #334155; }
+    .custom-tooltip.show { display: block; animation: tooltipFade 0.2s ease; }
+    @keyframes tooltipFade { from { opacity: 0; transform: translate(-50%, -10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+    .custom-tooltip strong { color: #fbbf24; }
+
+    .fab-container { position: absolute; bottom: -60px; left: 50%; transform: translateX(-50%); z-index: 900; width: auto; }
+    .btn-save-all { padding: 12px 24px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; border-radius: 30px; font-size: 0.88rem; font-weight: 800; box-shadow: 0 4px 18px rgba(16, 185, 129, 0.45); cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; white-space: nowrap; letter-spacing: 0.02em; transition: all 0.2s ease; }
+    .btn-save-all:active { transform: scale(0.96); box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); }
+    
+    .toast { position: fixed; top: -100px; left: 50%; transform: translateX(-50%); background: #10b981; color: white; padding: 12px 24px; border-radius: 30px; font-weight: 700; transition: top 0.35s cubic-bezier(0.16, 1, 0.3, 1); z-index: 2000; box-shadow: 0 6px 20px rgba(0,0,0,0.2); width: 80%; max-width: 380px; text-align: center; font-size: 0.9rem; }
+    .toast.show { top: 24px; }
+  </style>
+</head>
+<body>
+  <!-- KANVAS CONFETTI -->
+  <canvas id="confettiCanvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:3000; display:none;"></canvas>
+
+  <!-- KODE RAHASIA API -->
+  <script>
+    const CONFIG_API_URL = "https://script.google.com/macros/s/AKfycbwx3n8ulFnWfqT5vRNu22HDx3PbucoKZ0_UuaO1Btw-0Rb2CTIlDVbXN09C0xT37wc3/exec"; // <-- PASTE URL WEB APP APPS SCRIPT ANDA DI SINI
+    const CONFIG_FOLDER_ID = "1-IvqVsp3CZlLtZSNrnsSTgpKLyrA91ig"; // <-- PASTE FOLDER ID JIKA MAU
+
+    // ==========================================
+    // CONFETTI ENGINE (Zero-Dependency)
+    // ==========================================
+    let confettiCtx, confettiParticles = [];
+    function startConfetti() {
+      const canvas = document.getElementById('confettiCanvas');
+      canvas.style.display = 'block'; canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      confettiCtx = canvas.getContext('2d'); confettiParticles = [];
+      for(let i=0; i<150; i++) {
+        confettiParticles.push({
+          x: Math.random() * canvas.width, y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4, d: Math.random() * 150 + 10,
+          color: `hsl(${Math.random()*360}, 100%, 50%)`, tilt: Math.floor(Math.random() * 10) - 10,
+          tiltAngle: 0, tiltAngleInc: (Math.random() * 0.07) + 0.05
+        });
+      }
+      requestAnimationFrame(renderConfetti);
+      setTimeout(() => { canvas.style.display = 'none'; }, 6000);
+    }
+    function renderConfetti() {
+      if(document.getElementById('confettiCanvas').style.display === 'none') return;
+      confettiCtx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      confettiParticles.forEach((p, i) => {
+        p.tiltAngle += p.tiltAngleInc; p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2; p.x += Math.sin(p.d);
+        p.tilt = Math.sin(p.tiltAngle) * 15;
+        confettiCtx.beginPath(); confettiCtx.lineWidth = p.r; confettiCtx.strokeStyle = p.color;
+        confettiCtx.moveTo(p.x + p.tilt + p.r, p.y); confettiCtx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r); confettiCtx.stroke();
+      });
+      requestAnimationFrame(renderConfetti);
+    }
+
+    // ==========================================
+    // AUDIO ENGINE (Web Audio API) Zero-Dependency
+    // ==========================================
+    const SoundFX = {
+      ctx: null,
+      init: function() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if(AudioContext) this.ctx = new AudioContext();
+        }
+        if(this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+      },
+      playTone: function(freq, type, duration, vol=0.1) {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = type; osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+        gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + duration);
+      },
+      // 1. Suara Peluit Wasit (Mulai) - Pola: PRIT, PRIIITT
+      whistle: function() {
+        this.init();
+        if(!this.ctx) return;
+        const now = this.ctx.currentTime;
+        
+        const toot = (start, duration) => {
+          const osc = this.ctx.createOscillator();
+          const osc2 = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(2600, start);
+          osc.frequency.linearRampToValueAtTime(2700, start + duration);
+          
+          // Oscillator 2 sedikit berbeda frekuensinya untuk menghasilkan efek "getaran" (trill/beating) khas peluit
+          osc2.type = 'triangle';
+          osc2.frequency.setValueAtTime(2650, start); 
+          osc2.frequency.linearRampToValueAtTime(2750, start + duration);
+          
+          gain.gain.setValueAtTime(0, start);
+          gain.gain.linearRampToValueAtTime(0.2, start + 0.05);
+          gain.gain.setValueAtTime(0.2, start + Math.max(0, duration - 0.1));
+          gain.gain.linearRampToValueAtTime(0, start + duration);
+          
+          osc.connect(gain); osc2.connect(gain); gain.connect(this.ctx.destination);
+          osc.start(start); osc2.start(start);
+          osc.stop(start + duration); osc2.stop(start + duration);
+        };
+        
+        toot(now, 0.3);        // Tiupan pendek pertama (Prit!)
+        toot(now + 0.4, 0.8);  // Tiupan panjang kedua (Priiiittt!)
+      },
+      // Suara Geser/Rotasi (Swoosh/Sweep)
+      rotation: function() {
+        this.init();
+        if(!this.ctx) return;
+        const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.3);
+        
+        gain.gain.setValueAtTime(0, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.1, this.ctx.currentTime + 0.1);
+        gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.3);
+        
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.3);
+      },
+      // 2. Suara Pukulan Bola Voli (Hit/Score)
+      ballHit: function() {
+        this.init();
+        if(!this.ctx) return;
+        const osc = this.ctx.createOscillator(); const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(250, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(40, this.ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.4, this.ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.15);
+        osc.connect(gain); gain.connect(this.ctx.destination);
+        osc.start(); osc.stop(this.ctx.currentTime + 0.2);
+      },
+      // 3. Suara Klik Rubrik
+      click: function() {
+        this.init(); this.playTone(600, 'sine', 0.05, 0.1);
+      },
+      // 4. Suara Sukses (Ting!)
+      success: function() {
+        this.init();
+        this.playTone(440, 'sine', 0.1, 0.1); // A4
+        setTimeout(() => this.playTone(554, 'sine', 0.1, 0.1), 100); // C#5
+        setTimeout(() => this.playTone(659, 'sine', 0.2, 0.1), 200); // E5
+      }
+    };
+    // Agar audio context hidup saat pertama klik di halaman
+    document.addEventListener('click', () => SoundFX.init(), {once:true});
+
+  </script>
+
+  <!-- GLOBAL SETUP (ABOVE TABS) -->
+  <div class="app-top" id="appTop">
+    <h2><i class="fas fa-volleyball-ball"></i> LEMBAR KERJA BOLA VOLI FASE E</h2>
+    
+    <div class="container" style="padding-top: 0; padding-bottom: 0;">
+      <!-- IDENTITAS PENGERJAAN -->
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <h4 style="margin: 0 0 10px 0; color: #334155; font-size: 0.95rem;"><i class="fas fa-id-badge"></i> Identitas Pengerjaan</h4>
+        <style>
+          .identitas-grid { display: grid; gap: 15px; grid-template-columns: 1fr; }
+          @media (min-width: 768px) { .identitas-grid { grid-template-columns: repeat(4, 1fr); } }
+          .identitas-form-group { display: flex; flex-direction: column; justify-content: flex-end; }
+          .identitas-input { width: 100%; height: 38px; padding: 0 10px; border-radius: 6px; border: 1px solid #cbd5e1; font-family: inherit; font-size: 0.9rem; box-sizing: border-box; background: white; color: #0f172a; }
+          .identitas-label-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 6px; min-height: 24px; }
+        </style>
+        <div class="identitas-grid">
+          <div class="identitas-form-group">
+            <div class="identitas-label-row"><label style="margin:0;">Mode Pengerjaan</label></div>
+            <select id="lkMode" class="identitas-input" onchange="updateLKIdentityFields()">
+              <option value="individu">Individu</option>
+              <option value="kelompok">Kelompok</option>
+            </select>
+          </div>
+          <div class="identitas-form-group">
+            <div class="identitas-label-row"><label style="margin:0;">Pilih Kelas</label></div>
+            <select id="lkClass" class="identitas-input" onchange="updateLKIdentityFields()">
+              <option value="">-- Pilih Kelas --</option>
+            </select>
+          </div>
+          <div class="identitas-form-group">
+            <div class="identitas-label-row">
+              <label id="lkLabelName" style="margin:0;">Nama Murid</label>
+              <button id="btnAturPemetaan" onclick="openGroupingModal()" style="display:none; font-size:0.75rem; padding:4px 8px; background:#4f46e5; color:white; border:none; border-radius:4px; cursor:pointer;"><i class="fas fa-sitemap"></i> Atur</button>
+            </div>
+            <select id="lkName" class="identitas-input" onchange="updateLK1PrintHeaders()">
+              <option value="">-- Pilih Kelas Terlebih Dahulu --</option>
+            </select>
+          </div>
+          <div class="identitas-form-group">
+            <div class="identitas-label-row"><label style="margin:0;">Tanggal</label></div>
+            <input type="date" id="lkDate" class="identitas-input" onchange="updateLK1PrintHeaders()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+
+  <!-- MAIN HEADER / TABS -->
+  <div class="main-header" id="mainHeader">
+    <div class="main-tabs" style="max-width: 1200px; width: 100%; margin: 0 auto; box-sizing: border-box; padding: 0 10px;">
+      <button class="main-tab-btn active" id="btnTabAnalisis" onclick="SoundFX.click(); switchMainTab('analisis')">Lembar Kerja (LK)</button>
+      <button class="main-tab-btn" id="btnTabSimulasi" onclick="SoundFX.click(); switchMainTab('simulasi')">Simulasi Peran & Posisi</button>
+    </div>
+  </div>
+
+  <!-- TAB 1: LEMBAR KERJA -->
+  <div id="tabAnalisis" class="main-tab-content active-tab container" style="padding-top: 20px;">
+    
+    <!-- SUB MENU LK -->
+    <div style="display:flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;">
+       <button id="btnSubLK1" onclick="switchSubLK('lk1')" style="flex:1; padding:10px; font-weight:bold; border-radius:8px; border:none; background:#4f46e5; color:white; cursor:pointer;">LK 1: Analisis Permainan</button>
+       <button id="btnSubLK2" onclick="switchSubLK('lk2')" style="flex:1; padding:10px; font-weight:bold; border-radius:8px; border:1px solid #cbd5e1; background:white; color:#475569; cursor:pointer;">LK 2: Penerapan Keputusan</button>
+    </div>
+
+    <!-- LK 1 CONTENT -->
+    <div id="subLK1" class="card" style="display:block;">
+      <style>
+        .lk-print-table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 15px;
+        }
+        .lk-print-table th, .lk-print-table td {
+          border: 1px solid #cbd5e1;
+          padding: 8px;
+          text-align: left;
+        }
+        .lk-print-table th {
+          background-color: #f8fafc;
+          font-weight: bold;
+        }
+        .lk-print-textarea {
+          width: 100%;
+          border: 1.5px solid #cbd5e1;
+          border-radius: 8px;
+          padding: 10px;
+          font-family: inherit;
+          font-size: 0.9rem;
+          box-sizing: border-box;
+          min-height: 80px;
+          margin-top: 5px;
+        }
+        .lk-section-title {
+          color: var(--primary);
+          border-bottom: 2px solid #e2e8f0;
+          padding-bottom: 5px;
+          margin-top: 25px;
+          margin-bottom: 15px;
+        }
+        .lk-sub-title {
+          font-weight: bold;
+          margin-top: 15px;
+          margin-bottom: 10px;
+          color: #334155;
+        }
+        @media print {
+          @page { margin: 1cm; }
+          body { background: white !important; }
+          .main-header, .no-print, .bottom-sheet, .editor-modal, #btnSubLK1, #btnSubLK2, .main-tab-btn, #topHeaderId, #appTop, #toast { display: none !important; }
+          #tabSimulasi { display: none !important; }
+          #lk1-print-btn { display: none !important; }
+          
+          /* Hide the Identitas form area if we are printing LK1 */
+          .identitas-form { display: none !important; }
+          .card { box-shadow: none !important; margin: 0 !important; padding: 0 !important; }
+          .lk-print-table th, .lk-print-table td { border: 1px solid black !important; }
+          .lk-print-textarea { border: 1px solid black !important; border-radius: 0; min-height: 50px; }
+          h1, h2, h3, h4, p { page-break-inside: avoid; }
+          table { page-break-inside: auto; }
+          tr { page-break-inside: avoid; page-break-after: auto; }
+        }
+      </style>
+
+      <div class="print-header" style="text-align:center; border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 25px;">
+        <h2 style="margin:0 0 5px 0;">LEMBAR KERJA</h2>
+        <h3 style="margin:0 0 5px 0;">PERTEMUAN 1 – PERMAINAN BOLA VOLI</h3>
+        <h4 style="margin:0; font-weight:normal;">MENEMUKAN MASALAH DAN MERANCANG SOLUSI PERMAINAN</h4>
+      </div>
+
+      <div class="print-meta" style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 25px; font-weight: bold; font-size: 0.9rem; line-height: 1.6;">
+        <div style="flex: 1; min-width: 250px;">
+          <div>Satuan Pendidikan: SMAN 2 Ciamis</div>
+          <div>Mata Pelajaran: PJOK</div>
+          <div>Fase/Semester: E / Ganjil</div>
+          <div>Materi: Permainan Net – Bola Voli</div>
+          <div>Submateri: Passing dan Servis</div>
+        </div>
+        <div style="flex: 1; min-width: 250px;">
+          <div>Model Pembelajaran: Teaching Games for Understanding (TGfU)</div>
+          <div>Alokasi Waktu: 3 × 45 menit</div>
+          <div><span class="print-label-kelompok">Kelompok:</span> <span class="print-kelompok" style="border-bottom: 1px dotted #333; padding:0 10px;">…………………………</span></div>
+          <div><span class="print-label-anggota">Nama Anggota:</span> <span class="print-anggota" style="border-bottom: 1px dotted #333; padding:0 10px; font-weight:normal;">…………………………</span></div>
+        </div>
+      </div>
+
+      <h3 class="lk-section-title">A. TUJUAN PEMBELAJARAN</h3>
+      <p>Melalui aktivitas permainan bola voli, murid diharapkan mampu:</p>
+      <ol>
+        <li>Mengidentifikasi masalah taktis sederhana yang muncul dalam permainan bola voli.</li>
+        <li>Memahami tujuan, aturan, posisi, dan fungsi teknik passing serta servis.</li>
+        <li>Menganalisis penyebab bola mudah mati dan merancang solusi untuk mempertahankan permainan.</li>
+        <li>Menunjukkan kerja sama, komunikasi, sportivitas, dan tanggung jawab dalam kelompok.</li>
+      </ol>
+
+      <h3 class="lk-section-title">B. PETUNJUK PENGERJAAN</h3>
+      <ol>
+        <li>Kerjakan Lembar Kerja secara kolaboratif bersama kelompok.</li>
+        <li>Ikuti permainan bola voli 6 lawan 6 sesuai arahan dan aturan keselamatan.</li>
+        <li>Amati permainan, baik ketika menjadi pemain maupun saat menjalankan peran pengamat.</li>
+        <li>Diskusikan setiap pertanyaan berdasarkan pengalaman bermain dan hasil pengamatan.</li>
+        <li>Tuliskan jawaban secara ringkas, jelas, dan sesuai dengan situasi yang ditemukan.</li>
+        <li>Setiap anggota kelompok harus berkontribusi dalam diskusi, pengamatan, dan refleksi.</li>
+      </ol>
+
+      <h3 class="lk-section-title" style="font-size:1.3rem; margin-top: 30px;">C. KEGIATAN PEMBELAJARAN</h3>
+      
+      <h3 style="margin-top:20px; border-left:4px solid var(--primary); padding-left:10px;">1. MEMAHAMI</h3>
+      
+      <div class="lk-sub-title">TGfU Tahap 1 – Game Form</div>
+      <p><strong>Aktivitas: Mengenal Permainan Melalui Pengalaman Bermain</strong><br>
+      Ikuti permainan bola voli dengan format <strong>6 lawan 6</strong>. Amati situasi permainan, kemampuan tim dalam mempertahankan bola, serta penggunaan passing dan servis.</p>
+      
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">A. Pengamatan Awal Permainan</div>
+      <table class="lk-print-table">
+        <tr><th style="width:30px; text-align:center;">No.</th><th style="width:380px;">Aspek yang Diamati</th><th>Hasil Pengamatan</th></tr>
+        <tr><td style="text-align:center;">1</td><td>Apakah tim mampu mempertahankan bola agar tidak jatuh?</td><td><textarea class="lk-print-textarea" style="min-height:50px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">2</td><td>Apakah passing digunakan sesuai situasi?</td><td><textarea class="lk-print-textarea" style="min-height:50px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">3</td><td>Apakah servis dapat diarahkan ke area lawan?</td><td><textarea class="lk-print-textarea" style="min-height:50px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">4</td><td>Apakah pemain memahami posisi dan tugasnya?</td><td><textarea class="lk-print-textarea" style="min-height:50px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">5</td><td>Apakah pemain berkomunikasi saat bermain?</td><td><textarea class="lk-print-textarea" style="min-height:50px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">6</td><td>Apakah seluruh anggota tim terlibat aktif?</td><td><textarea class="lk-print-textarea" style="min-height:50px; margin:0; border:none;"></textarea></td></tr>
+      </table>
+
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">B. Pengalaman Bermain</div>
+      <ol>
+        <li>Apa kesulitan yang kelompok kalian alami selama permainan?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Teknik apa yang paling sering digunakan untuk mempertahankan bola?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Bagaimana komunikasi antarpemain selama permainan?<br><textarea class="lk-print-textarea"></textarea></li>
+      </ol>
+
+      <div class="lk-sub-title">TGfU Tahap 2 – Game Appreciation</div>
+      <p><strong>Aktivitas: Memahami Tujuan, Aturan, dan Karakteristik Permainan</strong><br>Diskusikan pertanyaan berikut berdasarkan pengalaman bermain.</p>
+      
+      <ol>
+        <li>Apa tujuan utama permainan bola voli?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa fungsi passing dalam permainan bola voli?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa fungsi servis dalam memulai permainan?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Mengapa pemain perlu memahami posisi dan tugasnya?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Mengapa komunikasi penting ketika bola datang ke area permainan?<br><textarea class="lk-print-textarea"></textarea></li>
+      </ol>
+
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">C. Memahami Situasi Permainan</div>
+      <p>Berikan jawaban berdasarkan pemahaman kelompok.</p>
+      <table class="lk-print-table">
+        <tr><th style="width:320px;">Situasi</th><th>Apa yang Seharusnya Dilakukan?</th></tr>
+        <tr><td>Bola datang ke arah pemain</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Bola jatuh di antara dua pemain</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Passing pertama tidak terarah</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Tim akan memulai permainan dengan servis</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Rekan satu tim kesulitan menerima bola</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+      </table>
+
+      <h3 style="margin-top:30px; border-left:4px solid var(--primary); padding-left:10px;">2. MENGAPLIKASI</h3>
+      
+      <div class="lk-sub-title">TGfU Tahap 3 – Tactical Awareness</div>
+      <p><strong>Aktivitas: Mengidentifikasi Masalah dan Menentukan Solusi Awal</strong><br>
+      Berdasarkan permainan dan hasil pengamatan, identifikasi masalah taktis yang muncul. Diskusikan kemungkinan penyebab dan solusi yang dapat dilakukan.</p>
+
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">A. Analisis Masalah Permainan</div>
+      <table class="lk-print-table">
+        <tr><th style="width:30px; text-align:center;">No.</th><th>Situasi Permainan</th><th>Masalah yang Ditemukan</th><th>Kemungkinan Penyebab</th><th>Solusi yang Diusulkan</th></tr>
+        <tr><td style="text-align:center;">1</td><td>Bola datang ke area belakang</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">2</td><td>Passing tidak terarah</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">3</td><td>Bola jatuh di antara pemain</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">4</td><td>Servis sulit diterima</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">5</td><td>Pemain kurang berkomunikasi</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+      </table>
+
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">B. Menentukan Prioritas Masalah</div>
+      <ol>
+        <li>Masalah yang paling sering terjadi dalam kelompok:<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Menurut kelompok, apa penyebab utama masalah tersebut?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Masalah apa yang harus diprioritaskan untuk diperbaiki?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Bagaimana cara kelompok mengatasi masalah tersebut?<br><textarea class="lk-print-textarea"></textarea></li>
+      </ol>
+
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">C. Uji Solusi Awal</div>
+      <p>Gunakan satu bola untuk melakukan latihan sederhana sesuai solusi yang telah disepakati. Lakukan secara bergiliran dengan rotasi peran pemain, pengamat teknik, pengamat taktik, pencatat, dan pemberi umpan balik.</p>
+      <table class="lk-print-table">
+        <tr><th style="width:30px; text-align:center;">No.</th><th>Solusi yang Dicoba</th><th>Hasil Latihan</th><th>Hal yang Perlu Diperbaiki</th></tr>
+        <tr><td style="text-align:center;">1</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">2</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td style="text-align:center;">3</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+      </table>
+
+      <div class="lk-only-kelompok">
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">D. Kerja Sama dan Pembagian Peran</div>
+      <table class="lk-print-table">
+        <tr><th>Nama Anggota</th><th>Peran yang Dilakukan</th><th>Kontribusi dalam Kelompok</th></tr>
+        <tr><td>1. <input type="text" style="width:80%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td></tr>
+        <tr><td>2. <input type="text" style="width:80%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td></tr>
+        <tr><td>3. <input type="text" style="width:80%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td></tr>
+        <tr><td>4. <input type="text" style="width:80%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td></tr>
+        <tr><td>5. <input type="text" style="width:80%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td></tr>
+        <tr><td>6. <input type="text" style="width:80%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td></tr>
+        <tr><td>Anggota lainnya</td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td><td><input type="text" style="width:100%; border:none; border-bottom:1px solid #ccc;"></td></tr>
+      </table>
+      <p style="font-style:italic; font-size:0.85rem; color:#64748b;">*Pastikan seluruh anggota kelompok mendapat kesempatan menjalankan peran yang berbeda.</p>
+      </div>
+
+
+      <h3 style="margin-top:30px; border-left:4px solid var(--primary); padding-left:10px;">3. MEREFLEKSI</h3>
+      <div class="lk-only-individu">
+      <p><strong>Aktivitas: Mengevaluasi Pengalaman dan Merencanakan Perbaikan</strong><br>
+      Jawablah pertanyaan berikut secara individu berdasarkan pengalaman selama pembelajaran.</p>
+      <ol>
+        <li>Masalah apa yang paling sering saya temukan dalam permainan?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa kesulitan yang saya alami ketika melakukan passing atau servis?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Bagaimana saya berkontribusi dalam kerja sama dan komunikasi kelompok?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa hal baru yang saya pahami tentang permainan bola voli?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa yang perlu saya tingkatkan pada pertemuan berikutnya?<br><textarea class="lk-print-textarea"></textarea></li>
+      </ol>
+      </div>
+
+      <div class="lk-only-kelompok">
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">Refleksi Kelompok</div>
+      <ol>
+        <li>Apa kekuatan utama kelompok saat bermain?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa hal yang masih perlu diperbaiki oleh kelompok?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Solusi apa yang akan diterapkan pada pertemuan berikutnya?<br><textarea class="lk-print-textarea"></textarea></li>
+      </ol>
+
+      <h3 class="lk-section-title">D. KESIMPULAN KELOMPOK</h3>
+      <p>Berdasarkan permainan, pengamatan, dan diskusi, tuliskan kesimpulan kelompok mengenai cara mempertahankan bola agar permainan dapat berlangsung lebih lama.</p>
+      <textarea class="lk-print-textarea" style="min-height: 100px;"></textarea>
+      
+      <p style="font-weight:bold; margin-top:15px;">Rencana perbaikan kelompok untuk pertemuan berikutnya:</p>
+      <textarea class="lk-print-textarea" style="min-height: 100px;"></textarea>
+
+
+      </div>
+
+      <div class="lk-only-individu">
+      <h3 class="lk-section-title">E. PENILAIAN DIRI</h3>
+      <p>Berikan tanda centang (✓) sesuai dengan kondisi diri sendiri.</p>
+      <table class="lk-print-table">
+        <tr><th style="width:30px; text-align:center;">No.</th><th>Pernyataan</th><th style="width:60px; text-align:center;">Ya</th><th style="width:80px; text-align:center;">Sebagian</th><th style="width:60px; text-align:center;">Belum</th></tr>
+        <tr><td style="text-align:center;">1</td><td>Saya memahami tujuan dan aturan dasar permainan bola voli.</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td style="text-align:center;">2</td><td>Saya dapat mengidentifikasi masalah dalam permainan.</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td style="text-align:center;">3</td><td>Saya memahami fungsi passing dan servis.</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td style="text-align:center;">4</td><td>Saya ikut berkontribusi dalam diskusi kelompok.</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td style="text-align:center;">5</td><td>Saya berkomunikasi dan bekerja sama dengan teman.</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td style="text-align:center;">6</td><td>Saya menjalankan peran dan tanggung jawab dengan baik.</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td style="text-align:center;">7</td><td>Saya bermain dengan sportif dan memperhatikan keselamatan.</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+      </table>
+      </div>
+
+      <div style="margin-top: 30px; margin-bottom: 30px;">
+        <p style="font-weight:bold;">Catatan atau umpan balik dari guru:</p>
+        <div style="border-bottom:1px dotted #333; height: 30px; width: 100%; margin-bottom: 20px;"></div>
+        <div style="border-bottom:1px dotted #333; height: 30px; width: 100%;"></div>
+      </div>
+      
+      <div style="display:flex; justify-content:space-between; margin-top:40px;">
+        <div>
+          <div style="margin-bottom:10px;"><strong>Tanggal:</strong> <span class="print-date-value">........................................</span></div>
+        </div>
+        <div style="text-align:center; width:200px;">
+          <div style="margin-bottom:10px;"><strong class="print-signature-name">Nama murid:</strong></div>
+          <div style="height:50px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:5px;">
+            <div class="print-signature-value" style="font-weight:bold; font-size: 0.9rem;"></div>
+          </div>
+          <div style="border-bottom:1px solid #333;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 40px; display:flex; gap:10px;" id="lk1-print-btn" class="no-print">
+        <button class="btn-primary" style="flex:1; background:#10b981;" onclick="printLK1()">
+          <i class="fas fa-print"></i> Cetak / Simpan PDF LK 1
+        </button>
+        <button class="btn-primary" style="flex:1;" onclick="SoundFX.success(); showToast('Tersimpan otomatis ke browser!')">
+          <i class="fas fa-save"></i> Simpan Jawaban
+        </button>
+      </div>
+      
+      <script>
+        function updateLK1PrintHeaders() {
+          const mode = document.getElementById('lkMode').value;
+          const cls = document.getElementById('lkClass').value;
+          const name = document.getElementById('lkName').value;
+
+          let groupLabel = "…………………………";
+          let memberLabel = "…………………………";
+
+          const kelompokSections = document.querySelectorAll('.lk-only-kelompok');
+          const individuSections = document.querySelectorAll('.lk-only-individu');
+          
+          const labelKel = document.querySelectorAll('.print-label-kelompok');
+          const labelAng = document.querySelectorAll('.print-label-anggota');
+          const sigName = document.querySelectorAll('.print-signature-name');
+
+          if(mode === 'kelompok') {
+            labelKel.forEach(el => el.innerText = "Kelompok:");
+            labelAng.forEach(el => el.innerText = "Nama Anggota:");
+            sigName.forEach(el => el.innerText = "Nama kelompok:");
+            
+            kelompokSections.forEach(el => el.style.display = 'block');
+            individuSections.forEach(el => el.style.display = 'none');
+            
+            if(cls && name) {
+              groupLabel = name;
+              const map = JSON.parse(localStorage.getItem('savedGroupMappings') || '{}')[cls] || {};
+              const members = Object.keys(map).filter(k => map[k] === name);
+              if(members.length > 0) {
+                memberLabel = members.join(', ');
+              }
+            }
+          } else {
+            labelKel.forEach(el => el.innerText = "Kelas:");
+            labelAng.forEach(el => el.innerText = "Nama Murid:");
+            sigName.forEach(el => el.innerText = "Nama murid:");
+            
+            kelompokSections.forEach(el => el.style.display = 'none');
+            individuSections.forEach(el => el.style.display = 'block');
+            
+            if(cls && name) {
+              groupLabel = cls;
+              memberLabel = name;
+            }
+          }
+
+          document.querySelectorAll('.print-kelompok').forEach(el => el.innerText = groupLabel);
+          document.querySelectorAll('.print-anggota').forEach(el => el.innerText = memberLabel);
+
+          const lkDateRaw = document.getElementById('lkDate').value;
+          let dateFormatted = "........................................";
+          if (lkDateRaw) {
+             const d = new Date(lkDateRaw);
+             const options = { day: 'numeric', month: 'long', year: 'numeric' };
+             dateFormatted = d.toLocaleDateString('id-ID', options);
+          }
+          document.querySelectorAll('.print-date-value').forEach(el => el.innerText = dateFormatted);
+          document.querySelectorAll('.print-signature-value').forEach(el => el.innerText = (cls && name) ? name : "");
+        }
+
+        function printLK1() {
+          SoundFX.click();
+          updateLK1PrintHeaders();
+
+          // Adjust textarea heights for printing
+          const textareas = document.getElementById('subLK1').querySelectorAll('textarea');
+          textareas.forEach(t => {
+            t.style.height = 'auto';
+            if(t.scrollHeight > 30) {
+              t.style.height = t.scrollHeight + 'px';
+            }
+          });
+
+          const originalDisplay2 = document.getElementById('subLK2').style.display;
+          document.getElementById('subLK2').style.display = 'none';
+
+          window.print();
+          
+          document.getElementById('subLK2').style.display = originalDisplay2;
+        }
+
+        function printLK2() {
+          SoundFX.click();
+          updateLK1PrintHeaders();
+
+          const textareas = document.getElementById('subLK2').querySelectorAll('textarea');
+          textareas.forEach(t => {
+            t.style.height = 'auto';
+            if(t.scrollHeight > 30) {
+              t.style.height = t.scrollHeight + 'px';
+            }
+          });
+
+          const originalDisplay1 = document.getElementById('subLK1').style.display;
+          document.getElementById('subLK1').style.display = 'none';
+          document.getElementById('subLK2').style.display = 'block';
+
+          window.print();
+
+          document.getElementById('subLK1').style.display = originalDisplay1;
+          document.getElementById('subLK2').style.display = 'block'; // Or whatever logic it should have
+        }
+      </script>
+    </div>
+
+    <!-- LK 2 CONTENT -->
+    <div id="subLK2" class="card" style="display:none;">
+      
+      <!-- PRINT HEADER FOR LK 2 -->
+      <div class="print-header" style="text-align:center; border-bottom: 2px solid #333; padding-bottom: 15px; margin-bottom: 25px;">
+        <h2 style="margin:0 0 5px 0;">LEMBAR KERJA</h2>
+        <h3 style="margin:0 0 5px 0;">PERTEMUAN 2 – PERMAINAN BOLA VOLI</h3>
+        <h4 style="margin:0; font-weight:normal;">MENERAPKAN KEPUTUSAN DAN MENINGKATKAN PERFORMA PERMAINAN</h4>
+      </div>
+
+      <div class="print-meta" style="display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 25px; font-weight: bold; font-size: 0.9rem; line-height: 1.6;">
+        <div style="flex: 1; min-width: 250px;">
+          <div>Satuan Pendidikan: SMAN 2 Ciamis</div>
+          <div>Mata Pelajaran: PJOK</div>
+          <div>Fase/Semester: E / Ganjil</div>
+          <div>Materi: Permainan Net – Bola Voli</div>
+          <div>Submateri: Passing dan Servis</div>
+        </div>
+        <div style="flex: 1; min-width: 250px;">
+          <div>Model Pembelajaran: Teaching Games for Understanding (TGfU)</div>
+          <div>Alokasi Waktu: 3 × 45 menit</div>
+          <div><span class="print-label-kelompok">Kelompok:</span> <span class="print-kelompok" style="border-bottom: 1px dotted #333; padding:0 10px;">…………………………</span></div>
+          <div><span class="print-label-anggota">Nama Anggota:</span> <span class="print-anggota" style="border-bottom: 1px dotted #333; padding:0 10px; font-weight:normal;">…………………………</span></div>
+        </div>
+      </div>
+
+      <h3 class="lk-section-title">A. MEMAHAMI KEMBALI</h3>
+      <p style="font-style:italic; font-size: 0.9rem; color: #475569;">Tinjau hasil LK pertemuan 1.</p>
+      <ol>
+        <li>Masalah utama yang ditemukan kelompok kami:<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Solusi yang telah direncanakan:<br><textarea class="lk-print-textarea"></textarea></li>
+      </ol>
+
+      <h3 class="lk-section-title">B. MENGAPLIKASI</h3>
+      
+      <div style="font-weight:bold; margin-top:15px; margin-bottom:5px;">1. Decision Making – Menentukan Keputusan</div>
+      <p>Pilih tindakan yang tepat berdasarkan situasi permainan berikut.</p>
+      <table class="lk-print-table">
+        <tr><th style="width:260px;">Situasi</th><th>Keputusan yang Dipilih</th><th>Alasan</th></tr>
+        <tr><td>Bola datang rendah</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Bola datang tinggi</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Bola berada di antara dua pemain</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Servis lawan sulit diterima</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+      </table>
+
+      <div style="font-weight:bold; margin-top:25px; margin-bottom:5px;">2. Skill Execution – Menerapkan Teknik</div>
+      <p>Amati pelaksanaan passing dan servis oleh anggota kelompok. Berikan tanda centang sesuai hasil pengamatan.</p>
+      <table class="lk-print-table">
+        <tr><th>Indikator</th><th style="width:100px; text-align:center;">Sudah Baik</th><th style="width:140px; text-align:center;">Perlu Ditingkatkan</th></tr>
+        <tr><td>Sikap awal passing</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td>Posisi tubuh saat passing</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td>Arah hasil passing</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td>Sikap awal servis</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td>Perkenaan bola saat servis</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+        <tr><td>Arah hasil servis</td><td style="text-align:center;"><input type="checkbox"></td><td style="text-align:center;"><input type="checkbox"></td></tr>
+      </table>
+      <p style="font-weight:bold; margin-top:15px;">Catatan atau umpan balik untuk teman:</p>
+      <textarea class="lk-print-textarea" style="min-height: 80px;"></textarea>
+
+      <div class="lk-only-kelompok">
+      <div style="font-weight:bold; margin-top:25px; margin-bottom:5px;">3. Performance – Penerapan dalam Permainan 6 vs 6</div>
+      <table class="lk-print-table">
+        <tr><th style="width: 300px;">Aspek Pengamatan</th><th>Hasil Pengamatan</th></tr>
+        <tr><td>Keputusan yang paling sering digunakan</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Penerapan passing dan servis</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Komunikasi antarpemain</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Kerja sama dan pembagian peran</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+        <tr><td>Hal yang perlu diperbaiki</td><td><textarea class="lk-print-textarea" style="min-height:40px; margin:0; border:none;"></textarea></td></tr>
+      </table>
+      </div>
+
+      <h3 class="lk-section-title">C. MEREFLEKSI</h3>
+      <ol>
+        <li>Keputusan apa yang paling membantu kelompok mempertahankan bola?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa perkembangan yang dirasakan dalam passing dan servis?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li class="lk-only-kelompok">Bagaimana kontribusi saya terhadap kerja sama tim?<br><textarea class="lk-print-textarea"></textarea></li>
+        <li>Apa yang akan saya tingkatkan pada pembelajaran berikutnya?<br><textarea class="lk-print-textarea"></textarea></li>
+      </ol>
+
+      <div class="lk-only-kelompok">
+      <p style="font-weight:bold; margin-top:15px;">Kesimpulan kelompok:</p>
+      <textarea class="lk-print-textarea" style="min-height: 100px;"></textarea>
+      </div>
+
+      <div style="margin-top: 30px; margin-bottom: 30px;">
+        <p style="font-weight:bold;">Catatan atau umpan balik dari guru:</p>
+        <div style="border-bottom:1px dotted #333; height: 30px; width: 100%; margin-bottom: 20px;"></div>
+        <div style="border-bottom:1px dotted #333; height: 30px; width: 100%;"></div>
+      </div>
+      
+      <div style="display:flex; justify-content:space-between; margin-top:40px;">
+        <div>
+          <div style="margin-bottom:10px;"><strong>Tanggal:</strong> <span class="print-date-value">........................................</span></div>
+        </div>
+        <div style="text-align:center; width:200px;">
+          <div style="margin-bottom:10px;"><strong class="print-signature-name">Nama murid:</strong></div>
+          <div style="height:50px; display:flex; align-items:flex-end; justify-content:center; padding-bottom:5px;">
+            <div class="print-signature-value" style="font-weight:bold; font-size: 0.9rem;"></div>
+          </div>
+          <div style="border-bottom:1px solid #333;"></div>
+        </div>
+      </div>
+
+      <div style="margin-top: 40px; display:flex; gap:10px;" id="lk2-print-btn" class="no-print">
+        <button class="btn-primary" style="flex:1; background:#10b981;" onclick="printLK2()">
+          <i class="fas fa-print"></i> Cetak / Simpan PDF LK 2
+        </button>
+        <button class="btn-primary" style="flex:1;" onclick="SoundFX.success(); showToast('LK 2 berhasil disimpan sementara!')">
+          <i class="fas fa-save"></i> Simpan Jawaban
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TAB 2: SIMULASI PERAN DAN POSISI -->
+  <div id="tabSimulasi" class="main-tab-content">
+    <!-- VIEW 1: SETUP -->
+    <div id="setupView" class="container" style="padding-top: 15px;">
+    
+    <button class="btn-secondary btn-cloud" id="btnUploadCloud" onclick="uploadToCloud()" style="display:none;">
+      <i class="fas fa-cloud-upload-alt"></i> Upload <span id="syncCount">0</span> Pertandingan ke Cloud
+    </button>
+
+
+    <!-- PEMAIN -->
+    <div class="setup-grid">
+      <div class="team-setup">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3>TIM A</h3>
+          <select id="groupSelectA" onchange="autoFillTeam('A', this.value)" style="font-size:0.75rem; padding:2px; border-radius:4px;"><option value="">-- Isi dari Pemetaan --</option></select>
+        </div>
+        <input type="text" id="teamAName" placeholder="Nama Tim A" style="margin-bottom:10px;" value="Tim A">
+        <div class="pos-input"><span>Pos 1</span><input type="text" id="in-A-p1" class="player-input"></div>
+        <div class="pos-input"><span>Pos 2</span><input type="text" id="in-A-p2" class="player-input"></div>
+        <div class="pos-input"><span>Pos 3</span><input type="text" id="in-A-p3" class="player-input"></div>
+        <div class="pos-input"><span>Pos 4</span><input type="text" id="in-A-p4" class="player-input"></div>
+        <div class="pos-input"><span>Pos 5</span><input type="text" id="in-A-p5" class="player-input"></div>
+        <div class="pos-input"><span>Pos 6</span><input type="text" id="in-A-p6" class="player-input"></div>
+      </div>
+      
+      <div class="team-setup">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3>TIM B</h3>
+          <select id="groupSelectB" onchange="autoFillTeam('B', this.value)" style="font-size:0.75rem; padding:2px; border-radius:4px;"><option value="">-- Isi dari Pemetaan --</option></select>
+        </div>
+        <input type="text" id="teamBName" placeholder="Nama Tim B" style="margin-bottom:10px;" value="Tim B">
+        <div class="pos-input"><span>Pos 1</span><input type="text" id="in-B-p1" class="player-input"></div>
+        <div class="pos-input"><span>Pos 2</span><input type="text" id="in-B-p2" class="player-input"></div>
+        <div class="pos-input"><span>Pos 3</span><input type="text" id="in-B-p3" class="player-input"></div>
+        <div class="pos-input"><span>Pos 4</span><input type="text" id="in-B-p4" class="player-input"></div>
+        <div class="pos-input"><span>Pos 5</span><input type="text" id="in-B-p5" class="player-input"></div>
+        <div class="pos-input"><span>Pos 6</span><input type="text" id="in-B-p6" class="player-input"></div>
+      </div>
+    </div>
+
+    <!-- PERANGKAT PERTANDINGAN -->
+    <div class="card" style="background: #f8fafc; border: 1px dashed #cbd5e1;">
+      <h3 style="text-align: center; font-size: 0.95rem; margin: 0 0 10px 0; color: #475569;">PERANGKAT PERTANDINGAN</h3>
+      <div class="setup-grid" style="margin-bottom:0;">
+        <div class="pos-input"><span>Wasit Utama</span><input type="text" id="in-O-W1" class="player-input"></div>
+        <div class="pos-input"><span>Wasit 2 (Net)</span><input type="text" id="in-O-W2" class="player-input"></div>
+        <div class="pos-input"><span>Hakim Garis 1</span><input type="text" id="in-O-HG1" class="player-input"></div>
+        <div class="pos-input"><span>Hakim Garis 2</span><input type="text" id="in-O-HG2" class="player-input"></div>
+        <div class="pos-input"><span>Hakim Garis 3</span><input type="text" id="in-O-HG3" class="player-input"></div>
+        <div class="pos-input"><span>Hakim Garis 4</span><input type="text" id="in-O-HG4" class="player-input"></div>
+        <div class="pos-input" style="grid-column: 1 / -1;"><span>Pencatat Skor</span><input type="text" id="in-O-Scorer" class="player-input"></div>
+        <div class="pos-input"><span>Pelatih Tim A</span><input type="text" id="in-O-PelatihA" class="player-input"></div>
+        <div class="pos-input"><span>Pelatih Tim B</span><input type="text" id="in-O-PelatihB" class="player-input"></div>
+        <div class="pos-input"><span>Komentator</span><input type="text" id="in-O-Komentator" class="player-input"></div>
+        <div class="pos-input"><span>Tim Medis</span><input type="text" id="in-O-Medis" class="player-input"></div>
+      </div>
+    </div>
+
+    <button class="btn-danger" style="margin-top:10px; width: 100%;" onclick="resetAllPositions()">
+      <i class="fas fa-trash-alt"></i> KOSONGKAN SEMUA POSISI
+    </button>
+    <button class="btn-primary" style="margin-top:10px;" onclick="startAssessment()">
+      <i class="fas fa-whistle"></i> MULAI PERTANDINGAN
+    </button>
+  </div>
+
+  <!-- VIEW 2: LIVE ASSESSMENT -->
+  <div id="assessmentView" style="display:none;">
+    <div class="scoreboard">
+      <div class="team-score"><div class="name"><span id="sbNameA">TIM A</span> <span class="serve-indicator" id="serveA">🏐</span></div><div class="score-controls"><button class="score-btn" onclick="changeScore('A', -1)">-</button><div class="score-display" id="scoreA">0</div><button class="score-btn" onclick="changeScore('A', 1)">+</button></div></div>
+      <div class="score-divider">:</div>
+      <div class="team-score"><div class="name"><span id="sbNameB">TIM B</span> <span class="serve-indicator" id="serveB">🏐</span></div><div class="score-controls"><button class="score-btn" onclick="changeScore('B', -1)">-</button><div class="score-display" id="scoreB">0</div><button class="score-btn" onclick="changeScore('B', 1)">+</button></div></div>
+    </div>
+
+    <div class="container">
+      <div class="brand-text">BOLA VOLI SMANDACIS</div>
+      <div class="court-live-wrapper">
+        <button class="btn-rotate rotate-top" onclick="rotateTeam('B')"><i class="fas fa-redo"></i></button>
+        <button class="btn-rotate rotate-bot" onclick="rotateTeam('A')"><i class="fas fa-redo"></i></button>
+        <div class="court-live">
+          <button style="position:absolute; top:10px; left:10px; z-index:20; background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:var(--primary); cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="SoundFX.click(); document.getElementById('manualOverlay').classList.add('active'); document.getElementById('manualMenu').classList.add('active');"><i class="fas fa-cog"></i> Manual</button>
+          <button style="position:absolute; top:10px; right:10px; z-index:20; background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:var(--primary); cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="SoundFX.click(); openAddRoleModal();"><i class="fas fa-plus"></i> Peran</button>
+          <div class="court-inner" id="courtInnerBox">
+            <div class="net-marker"></div>
+            <div class="half-court top"><div class="court-label" id="labelTop">TIM B</div><div class="attack-line-top"></div></div>
+            <div class="half-court bot"><div class="court-label" id="labelBot">TIM A</div><div class="attack-line-bot"></div></div>
+            <div id="courtNodes"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fab-container">
+        <button class="btn-save-all" id="btnSubmitAll" onclick="saveToOfflineStorage()">
+          <i class="fas fa-save"></i> SIMPAN PERTANDINGAN (OFFLINE)
+        </button>
+      </div>
+    </div>
+  </div>
+  </div> <!-- END TAB SIMULASI -->
+
+  <!-- MODAL PEMETAAN KELOMPOK -->
+  <div class="bottom-sheet-overlay" id="groupingOverlay" onclick="closeGroupingModal()"></div>
+  <div class="editor-modal" id="groupingModal" style="height: 90vh; width: 95vw; max-width: 1000px; display: flex; flex-direction: column; background: #f8fafc; overflow: hidden; padding: 0;">
+    <div class="modal-header-bar" style="background: white; padding: 15px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); flex-shrink: 0;">
+      <div class="modal-title-text" style="color: var(--primary);"><i class="fas fa-sitemap"></i> Pemetaan Kelompok Manual & Asesmen Awal</div>
+      <button class="btn-close-modal" onclick="closeGroupingModal()"><i class="fas fa-times"></i></button>
+    </div>
+    
+    <div style="padding: 15px 20px; flex-shrink: 0; background: #eef2ff; border-bottom: 1px solid #e2e8f0; display:flex; flex-direction:column; gap:15px; margin: 10px; border-radius: 8px;">
+      <div style="display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+        <strong style="color: #1e3a8a; margin-right: 10px;"><i class="fas fa-hand-pointer"></i> Pilih Kelompok Tujuan (Lalu Ketuk Nama Murid Di Bawah):</strong>
+        <div id="activeTargetLabel" style="background: #4f46e5; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-bullseye"></i> Target: Kelompok 1</div>
+      </div>
+      <div id="targetGroupContainer" style="display: flex; gap: 8px; flex-wrap: wrap; flex: 1;">
+        <!-- Target pills will go here -->
+      </div>
+    </div>
+    
+    <div style="padding: 0 20px; display:flex; gap:10px; margin-bottom: 10px;">
+      <button style="border:1px solid #10b981; color:#10b981; background:white; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fas fa-random"></i> Bagi Kelompok HETEROGEN / Seimbang</button>
+      <button style="border:1px solid #64748b; color:#64748b; background:white; padding:8px 12px; border-radius:6px; font-weight:bold; cursor:pointer;"><i class="fas fa-layer-group"></i> Bagi Kelompok Homogen (Diferensiasi)</button>
+    </div>
+
+    <!-- Student Grid -->
+    <div style="flex: 1; overflow-y: auto; padding: 10px 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; align-content: start;" id="studentGridContainer">
+      <!-- Cards go here -->
+    </div>
+
+    <!-- Bottom Bar -->
+    <div style="padding: 15px 20px; background: white; border-top: 1px solid #e2e8f0; flex-shrink: 0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+      <button class="btn-secondary" style="margin: 0; background: #f59e0b; color: white; border: none; width: auto; padding: 10px 20px;" onclick="resetGrouping()"><i class="fas fa-undo"></i> Reset Ke Belum Dikelompokkan</button>
+      <div style="font-size: 0.9rem; color: #64748b; font-weight: bold;" id="groupingStats">Total Murid: 0 | Kelas: X E-6</div>
+      <div style="display:flex; gap:10px;">
+        <button class="btn-secondary" style="margin: 0; width: auto; padding: 10px 20px;" onclick="closeGroupingModal()">Batal</button>
+        <button class="btn-primary" style="margin: 0; background: #4f46e5; width: auto; padding: 10px 20px;" onclick="saveGrouping()">Simpan & Terapkan Pemetaan Kelompok</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDITOR KRITERIA -->
+  <div class="bottom-sheet-overlay" id="editorOverlay" onclick="closeCriteriaEditor()"></div>
+  <div class="editor-modal" id="criteriaEditor">
+    <div class="modal-header-bar">
+      <div class="modal-title-text">Kriteria Dinamis</div>
+      <button class="btn-close-modal" onclick="closeCriteriaEditor()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="tab-container">
+      <button class="tab-btn active" id="tabPemain" onclick="SoundFX.click(); switchEditorTab('player');">Pemain</button>
+      <button class="tab-btn" id="tabPerangkat" onclick="SoundFX.click(); switchEditorTab('official');">Perangkat</button>
+    </div>
+    <div class="editor-content" id="editorContent"></div>
+    
+    <button class="btn-secondary" style="margin-bottom: 10px; background: #e0e7ff; color: var(--primary);" onclick="SoundFX.click(); addNewCriteria();">
+      <i class="fas fa-plus"></i> Tambah Kriteria Baru
+    </button>
+    <button class="btn-primary" onclick="SoundFX.success(); saveCriteriaEditor();">Simpan Perubahan</button>
+  </div>
+
+  <!-- MODAL STATUS KELAS -->
+  <div class="bottom-sheet-overlay" id="statusOverlay" onclick="closeClassStatus()"></div>
+  <div class="editor-modal" id="statusModal" style="height: 70vh;">
+    <div class="modal-header-bar">
+      <div class="modal-title-text"><i class="fas fa-clipboard-list"></i> Status Absen Penilaian</div>
+      <button class="btn-close-modal" onclick="closeClassStatus()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="font-size: 0.8rem; color: #64748b; margin-top:0;">Nama-nama ini diambil dari Data Murid. Jika hijau, artinya nilainya sudah tersimpan di memori (offline).</p>
+    <div class="editor-content status-list" id="statusListContent"></div>
+    <button class="btn-primary" onclick="SoundFX.click(); closeClassStatus();">Tutup</button>
+  </div>
+
+  <!-- BOTTOM SHEET (SCORING) -->
+  <div class="bottom-sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+  <div class="bottom-sheet" id="scoringSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">
+        <span id="sheetStudentName">Nama Siswa</span>
+        <span id="sheetRoleLabel" class="sheet-subtitle">Peran</span>
+      </div>
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn-substitute" id="btnSubstitute" onclick="substitutePlayer()"><i class="fas fa-exchange-alt"></i> Substitusi</button>
+        <button class="btn-substitute" id="btnRemoveOfficial" style="background:var(--danger); display:none;" onclick="removeOfficial()"><i class="fas fa-trash"></i> Hapus</button>
+        <button class="btn-close-modal" onclick="closeSheet()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+      </div>
+    </div>
+    <div id="criteriaListUI"></div>
+    <div class="card" style="margin-top:15px; background:#f8fafc; padding:10px;">
+      <label style="font-size:0.8rem;">Catatan Khusus / Insiden (Opsional)</label>
+      <div style="display:flex; gap:8px; margin-bottom:10px;">
+        <button class="btn-secondary" style="margin-top:0; flex:1;" id="btnBadge-star" onclick="toggleBadge('star')">⭐ Inisiatif</button>
+        <button class="btn-secondary" style="margin-top:0; flex:1;" id="btnBadge-yellow" onclick="toggleBadge('yellow')">🟨 K. Kuning</button>
+        <button class="btn-secondary" style="margin-top:0; flex:1;" id="btnBadge-red" onclick="toggleBadge('red')">🟥 K. Merah</button>
+      </div>
+      <textarea id="sheetNotes" placeholder="Ketik catatan tambahan di sini..." style="width:100%; border:1px solid #cbd5e1; border-radius:5px; padding:8px; font-size:0.8rem; box-sizing:border-box; min-height: 50px;"></textarea>
+    </div>
+    <button class="btn-primary" style="margin-top: 10px; background:#1e293b;" onclick="closeSheet()">Selesai (Tutup)</button>
+  </div>
+
+  <div class="custom-tooltip" id="customTooltip"></div>
+  <div class="toast" id="toast">Berhasil!</div>
+
+  <!-- MODAL TINDAKAN MANUAL -->
+  <div class="bottom-sheet-overlay" id="manualOverlay" onclick="closeManualMenu()"></div>
+  <div class="bottom-sheet" id="manualMenu">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Tindakan Manual / Set 2</div>
+      <button class="btn-close-modal" onclick="closeManualMenu()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+    </div>
+    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeam('A');"><i class="fas fa-redo"></i> Rotasi Tim A (Maju)</button>
+    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeamUndo('A');"><i class="fas fa-undo"></i> Undo Rotasi Tim A (Mundur)</button>
+    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeam('B');"><i class="fas fa-redo"></i> Rotasi Tim B (Maju)</button>
+    <button class="btn-secondary" onclick="SoundFX.click(); rotateTeamUndo('B');"><i class="fas fa-undo"></i> Undo Rotasi Tim B (Mundur)</button>
+    <hr style="border:0; border-top:1px solid #e2e8f0; margin:15px 0;">
+    <button class="btn-secondary" onclick="SoundFX.click(); toggleCourtSide();"><i class="fas fa-exchange-alt"></i> Tukar Lapangan Sisi Visual</button>
+    <button class="btn-secondary" onclick="SoundFX.click(); resetScore();"><i class="fas fa-eraser"></i> Setel Ulang Skor (0-0)</button>
+    <button class="btn-primary" style="margin-top:15px;" onclick="SoundFX.click(); beginSetTwo();"><i class="fas fa-users-cog"></i> GANTI FORMASI / MULAI SET 2</button>
+  </div>
+
+  <!-- MODAL SUBSTITUSI -->
+  <div class="bottom-sheet-overlay" id="subOverlay" onclick="closeSubModal()"></div>
+  <div class="bottom-sheet" id="subModal">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Substitusi Pemain</div>
+      <button class="btn-close-modal" onclick="closeSubModal()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+    </div>
+    <label>Nama Pemain Pengganti (Baru):</label>
+    <select id="subSelectStudent" style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:8px; margin-bottom:15px; font-family:inherit;"></select>
+    <button class="btn-primary" onclick="confirmSubstitute()">Gantikan Pemain</button>
+  </div>
+
+  <!-- MODAL TAMBAH PERAN MASSAL -->
+  <div class="bottom-sheet-overlay" id="addRoleOverlay" onclick="closeAddRoleModal()"></div>
+  <div class="bottom-sheet" id="addRoleModal">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title">Tambah Perangkat (Massal)</div>
+      <button class="btn-close-modal" onclick="closeAddRoleModal()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="font-size: 0.8rem; color: #64748b; margin-top:0;">Pilih nama murid untuk peran yang ingin ditambahkan. Kosongkan jika tidak perlu.</p>
+    <div class="setup-grid" id="massAddRoleGrid" style="max-height: 50vh; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+      <!-- Akan diisi otomatis oleh JavaScript -->
+    </div>
+    <button class="btn-primary" onclick="confirmAddRole()">Tambahkan Semua Peran</button>
+  </div>
+
+  <!-- MODAL DATABASE MURID -->
+  <div class="bottom-sheet-overlay" id="dbOverlay" onclick="closeDatabaseModal()"></div>
+  <div class="bottom-sheet" id="dbModal">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div class="sheet-title"><i class="fas fa-database"></i> Database Murid</div>
+      <button class="btn-close-modal" onclick="closeDatabaseModal()" aria-label="Tutup"><i class="fas fa-times"></i></button>
+    </div>
+    
+    <div>
+      <label>Nama Kelas (Untuk Disimpan):</label>
+      <input type="text" id="manualClassName" placeholder="Cth: Kelas X-A" style="margin-bottom:10px;">
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+        <label style="margin:0;">Daftar Nama Murid (Copy-Paste / CSV):</label>
+        <button class="btn-secondary" style="margin:0; padding:4px 8px; font-size:0.75rem;" onclick="document.getElementById('csvFileInput').click()">
+          <i class="fas fa-file-csv"></i> Upload CSV
+        </button>
+        <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleCSVUpload(event)">
+      </div>
+      
+      <textarea id="manualStudentList" placeholder="Andi Darmawan&#10;Budi Santoso&#10;Cici Pertiwi" style="width:100%; border:2px solid #e2e8f0; border-radius:8px; padding:10px; font-size:0.85rem; height:150px; box-sizing:border-box; font-family:inherit; margin-bottom:10px;"></textarea>
+      
+      <div style="display:flex; gap:10px;">
+        <button class="btn-primary" style="flex:1; margin-top:0;" onclick="saveToLocalRoster()">
+          <i class="fas fa-hdd"></i> Simpan Kelas
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // MAIN TAB NAVIGATION
+    // ==========================================
+    function switchMainTab(tab) {
+      document.getElementById('btnTabAnalisis').classList.toggle('active', tab === 'analisis');
+      document.getElementById('btnTabSimulasi').classList.toggle('active', tab === 'simulasi');
+      document.getElementById('tabAnalisis').classList.toggle('active-tab', tab === 'analisis');
+      document.getElementById('tabSimulasi').classList.toggle('active-tab', tab === 'simulasi');
+    }
+
+    function switchSubLK(lk) {
+      SoundFX.click();
+      const btn1 = document.getElementById('btnSubLK1');
+      const btn2 = document.getElementById('btnSubLK2');
+      const sub1 = document.getElementById('subLK1');
+      const sub2 = document.getElementById('subLK2');
+
+      // Reset
+      btn1.style.background = 'white'; btn1.style.color = '#475569'; btn1.style.border = '1px solid #cbd5e1';
+      btn2.style.background = 'white'; btn2.style.color = '#475569'; btn2.style.border = '1px solid #cbd5e1';
+      sub1.style.display = 'none';
+      sub2.style.display = 'none';
+
+      if (lk === 'lk1') {
+        btn1.style.background = '#4f46e5'; btn1.style.color = 'white'; btn1.style.border = 'none';
+        sub1.style.display = 'block';
+      } else {
+        btn2.style.background = '#4f46e5'; btn2.style.color = 'white'; btn2.style.border = 'none';
+        sub2.style.display = 'block';
+      }
+    }
+
+    // ==========================================
+    // AUDIO UNLOCKER (Khusus HP / Mobile)
+    // ==========================================
+    function unlockAudio() {
+      if(SoundFX.ctx && SoundFX.ctx.state === 'suspended') SoundFX.ctx.resume();
+      else if(!SoundFX.ctx) SoundFX.init();
+    }
+    document.body.addEventListener('touchstart', unlockAudio, { once: true });
+    document.body.addEventListener('click', unlockAudio, { once: true });
+
+    // ==========================================
+    // DATABASE MURID & RAPID-FIRE ASSIGNMENT
+    // ==========================================
+    let currentRoster = [];
+    let activePlayerInput = null;
+
+    function openDatabaseModal() { document.getElementById('dbOverlay').classList.add('active'); document.getElementById('dbModal').classList.add('active'); }
+    function closeDatabaseModal() { document.getElementById('dbOverlay').classList.remove('active'); document.getElementById('dbModal').classList.remove('active'); }
+
+    let savedClasses = {}; // Object untuk menyimpan daftar kelas-kelas (Kunci: Nama Kelas, Value: Array Murid)
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const inputs = document.querySelectorAll('.player-input');
+      inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          inputs.forEach(i => i.classList.remove('active-input'));
+          this.classList.add('active-input');
+          activePlayerInput = this;
+        });
+        input.addEventListener('input', function() { checkUsedChips(); });
+      });
+      
+      // ==========================================
+      // 📂 DATABASE MURID PERMANEN (BAWAAN APLIKASI)
+      // Tambahkan nama-nama murid Anda di sini agar langsung muncul saat dibuka di HP
+      // ==========================================
+      const DATABASE_BAWAAN = {"X E-1": ["ADAM KHADAFI AL-GHIFFARI", "AHMAD JERIKO", "AISHA AULIA SALSABILA", "AJENG NUR HANIFA", "AKBAR FADHIL PUTRA TAUFIQILLAH", "ALFATH RAFI FAUZAN ABDILLAH", "AULIA ALTAFUNYSA", "AZ ZAHRA ZAIRA LISTIARINI MAHARDIKA", "AZKA QOLBI", "DEISYA ASY SYIFA", "FEBBY ARI MAULANA", "FITRIANY RACHMA SALSABILA", "GITA NURUL QURRATA A`YUNI", "INDAH LESTARI", "JAUZA ZAHRA", "KEVIN RENDIRA AGIRAPUTRA", "KYAILLA AINUN NISA FIRDAUS", "LUKMAN NUDIN", "MAYSA RIDONA RAMNAZANIA", "MEITA ISLAMI CLARA", "MIRZA HARITH HAZIQ", "MUHAMAD ALFIN FAI`S", "MUHAMAD DEDE RIZKI", "MUHAMMAD HILMI GHASSANI", "NAZMEE ASILA EBIDA NURWANA", "NAZWA ADDAROINI", "PUTRI BUNGA SALSABILA", "RAIA SYABILLA MUSHAQEENA", "REGIS FIRYAL ARFAN", "RENDI MAULANA PUTRA", "RESNA PUTRI LIANA", "RISQY AZHAR FADHILAH", "RISVI SABILA WULANDARI", "RYZA ARKHADYA PUTRA", "SALFA RANIASALMA", "SAZKI SYIFAUR ROHIM", "SEKAR AYU ZAHWA AMELIA", "SILFIA ANGGRAINI AGUNG", "SOPYAN NURDIANA", "TAMA APRILLIANO", "VALENT OCTORA DAFFISYA", "WIDIA ZULIANA"], "X E-2": ["ANDIKA JAMALUDIN", "ANITA RAHMA MAULIDA", "ASYRAF RIZQI TAUFIQILLAH NUR", "AZWAR FAPELA", "BUNGA FAIZA ADELIA", "CAYYIRA DAIMA IZZATY", "DENNIS SATRIA MAULANA", "DIKRI SUBAGJA", "ESTER AALIYA MARANATHA", "FAREL QORY RAMADANI", "GHILMAN DAVIANSYAH", "HAIFANA", "HAMIDATULHAQ LAILATUL RAMDHANIAH", "HASNA FAUZIYAH PUTRI", "HASYA NUR SABILA", "KEITHA LERIAN DHISAPIA", "KEYLA KANAZWA AZ ZAHRA", "KHAIRA AZIA PUTRI", "KHAMILLA RESTU FAHIRA", "MAISYA RACHMA", "MUHAMAD AL ARKAN SALEH", "MUHAMMAD FAKHRI APRIANSYAH", "MUHAMMAD KAKA ADRIANSYAH", "MUHAMMAD NADHIF RADITYA", "MUHAMMAD TSANY FEBRIAN", "MUTIARA REGINA PUTRI SISMANTO", "NAFILA MARA QONITATILLAH", "NAISYLA PUTRI NURANISA", "NASYWA FARIDAH PERMANA", "NAUFAL AKBAR RIZKI", "NAWAL MUHAMMAD FADLY", "PUTRI GALUH WASTU KENCANA", "RAKA EKA NUGRAHA", "REIHAN HADININGRAT", "RIZKI MUHARAM", "SEFNI DWI ANANDA", "SHALSABILA AYU SAFITRI", "SINDI MARYANI", "SUGA ZAKI YANFAUZAM", "YUANITA NURUL ILMI", "ZAHRATUL SITA RAMADANIA", "ZIDAN NAUFAL RAISYA"], "X E-3": ["ACENG MUHAMAD SOLAHUDIN", "ADI IRWANSYAH", "ALIKA NAZEELA PUTRI NURWANDA", "ALVIN RIZKI NUGRAHA", "ASTRY OKTAVIA", "DIMASRA ALIYUHAFISTA", "DIVA PUSPITA DEWI", "DZIKRI MUDZAKIR", "ERWIN MAULANA RUSTIANDI", "FAIKAR ULYA FASHA", "FIKRI NURUL FAZRI", "HABIL YUSUF SAIFULLOH", "HALIMATUL ZAHRA", "KANAYA ZULFA SAKIRADIA", "KAYLA AISYAH MUZNA HERMAWAN", "KIRANI FATIMAH AZ ZAHRA", "LISTA NIVRIA HIDAYAT ARIEF", "LUSI RAHMAWATI", "MAURA NURFADHILAH NUGRAHA", "MAYA MELIAWATI", "MELANI PATURROHMAH", "MEYDA NOOR ZAHRA", "MOEHAMAD SANDI POETRA", "MUHAMMAD DAVIED NURROHMAN", "MUHAMMAD RAFFA GONZALES", "MUHAMMAD RAZKY FATHIAN ARIPIN", "MUHAMMAD RIZQI ALIF WARDHANA", "NABILA ANANDITA", "NAEEMA FAKHIRA", "NAJMA ZHAFIRAH NURSALIMAH", "RADEN ATHALLAH FAEYZA ALTHAF RAHARJA", "RAYHAN ADITYA PRATAMA", "RAYYAA ALKHALIHFI", "REGINA AULIA PUTRI", "REYNA ADRIANI HERMANA", "RIAN SUPRIATNA", "RIFANA ALPARO PADILAH", "SARAH NURHIDAYAH", "SYAUQI ARKA ASSHIDQI", "TAMAMU RIJKI", "TSANIA NUR AMALIA", "VINA SITI AZIZAH"], "X E-4": ["ADE PARSYA AL PIYATU ZAHRA", "ADITTYA ARDIANSYAH", "AHMAD RESTU USANI", "ARSYILA KHOFIYYA SAHORI", "ARYA VITRA OZORA", "AZKIA AINUL FIKRIYAH", "DELISA NUR HOPIPAH", "ELISKA FUTRI", "FABIL NURFAWWAZ GINANJAR", "GALUH FARHAT ANWAR", "IMAM BADRUTAMAM", "ISTHOFIAN DANIEL ILYAS", "KAYLA LOVELY PUTRI MARDIONO", "LISANA SHIDQI ALIYYA", "MOCH RAFA FADILLAH", "MUHAMAD HAIKAL ARDANI", "MUHAMAD MALIK IBRAHIM", "MUHAMAD SANDI YUDA PRATAMA", "MUHAMMAD RIFKI PURNAMA", "NABILA HASNA AZKA", "NAKEISHA AMAIRA PUTRI", "NARESWARI BELICIA KHALDA IRAWAN", "NAUREEN ALIFA SAFFANNA", "NAYRA FITRI WIDIATHARI", "NIZAR MUHAMMAD FAUZAN", "NOVITA AMELIA", "QIYAS AL FATIYA IKHSANI", "R  SYAHRI KURNIAWAN", "RADITYA AZHAR PERMANA", "RAHMA NUR RAISA", "RAISHA ALTAFFUNNISSA", "RAYHAN PRATAMA PUTRA", "REGINA RACHMA", "REJASIDA PRATAMA", "REVAN ALBAN JAFIER", "RIFAL NURDIANA PUTRA", "RIZKY RAHMAT HIDAYAT", "SALSABILA PUTRI AZELA", "SHAKILA NOER CANDRAWIMBA", "WIDIA NISFIANI", "YUNITA ANGGRAENI PUTRI", "ZAHIRA KALILAA JASMINE"], "X E-5": ["AIRA APRILIA PERMANA", "ALLYA ZAHIRA FEBRIYANTI", "ANDREA TRY INIESTA", "AZMI AGUSTIN", "BRADA OKA ARGHANI", "DAVA ALDIA RAHMADIKA", "DENI ALIF PERMANA", "DEVIN ADHI MUKTI", "ELIS SITI SA`ADAH", "FADHLAN ARSYA FAUZI", "FIANNA KHOIRUNNISA", "FIDELYA NATASYA", "GILANG ANGGA KUSUMA", "GITHA ISDANA DEEPIKA", "HILMY SURYAPRAJA", "ILZA MUDIA AZIZAH", "INTAN RAHMANIA YANUAR", "KHALISA PUTRI", "KIRANA AZ-ZAHRA PUTRI DEWI", "MECCA SUPIARTI KURNIYA", "MEI GINA KAMIMA PUTRI", "MOHAMAD REIHAN", "MUHAMMAD FARDAN", "MUHAMMAD GELAR RAIHAN", "MUHAMMAD HASBI TSANI", "MUHAMMAD RASHIEKA RAHMAN", "NABILA AULIA PUTRI SUTENDI", "NAZHIF ARSALAN BUDIANA", "NURIANTI AULIA", "QUINZA AZ ZAHWA LIEYANA PUTRI", "RADITYA ALJABBAR NUGRAHA", "RAISYA PEBRIYANTI LESMANA", "REGAN WIDIANTO", "RESTU PUTRI EDITIYANI", "REVAN ARDIAN FADILAH", "SALMA AULIA", "SALWA KHAIRUNNISA SALSABILLA", "SILVIA FARHATUSSA`ADAH", "SOPAN SOPIAN", "VIRA NISA", "ZAHIR", "ZIAN ALYA NURAZIZAH"], "X E-6": ["AGNIA NURHALIZAH", "AIRA NUR APRILLIANI", "AKBAR SAHRUL HUDA", "ALIFA HANUM RAMADANI", "ALTHAF REVANLY YAZID", "ALVIANI MARTHA CAHYANI", "AYRA RIANA PUTRI", "AZKIA RAHMADEA", "DEAD SALSA RIANGGA", "DESTY DWI ASTUTI", "DIAL ANGGA", "EUIS RAHAYU SRI NINGSIH", "FAWWAZ RIHHADATUL TAUFIQ", "GALUH ADITYA PAMUNGKAS", "KHAYRA AZ ZAHRAH", "LINDU ALRAMADHAN", "LULU LUTPIA", "LUTFIA DARA SABRINA", "MAHARANI RAJWA ALMIRA", "MAURA ASYA KANAYA", "MOCH REVANO PUTRA PERMANA", "MUHAMAD FIKRI JULIANSYAH TARMIDI", "MUHAMMAD HISYAM AKBAR MAULANA", "MUHAMMAD NIZAR NURUL AZIZ", "NAZWAR HIDAYATULOH", "NOURA RAHMA AZIZA", "RASYA RAHMADIKA PANGESTU", "RAYHAN ZAID HAIDAR", "REGA SAPUTRA", "REISYA PUTRIAYU MUNAWAR", "RENI RAHMAWATI", "RIJAL MUHAMMAD RAFII` AQIMUDDIN", "RINDU NURHODIJAH", "RISCA TRI NUR AULIA", "RIZKY RESTU EKA SAPUTRA", "SALFA FARADILA", "SRI NURHAYATI", "TASHYA AZ ZAHRA", "WAHYU FAJAR SIDIQ", "WILDHAN NOOR CAHYANA", "YASER RAFIF MUHTASYAM", "YUSI NURPADILAH"], "X E-7": ["ADDINA NANDHITA JAHARI", "AGNI AHMAR ROHMAN ROHMANA", "AGUNG JAYA  PRASETIYA", "AISHA ZAHRA", "ALYA NURUL RAMADANI", "AMIRA PUTRI AZZAHRA", "ANINDHITA PUTRI PRASETIO", "ARGA PARDA BUAN", "ARKAAN PRATAMA PUTRA", "ARSYA ELBAS KARAMULLOH HIDAYAT", "AZZAHRA DURRATUN NAFISAH", "CHRISTABELL AURELIA CHANIZA PUTRI", "DAVID SHIDQI ALAMSYAH", "DINDA YUWANITA SUDRAJAT", "ELSA TRIA PURNAMA", "FRISCO COLORADO PUTRA CAHYADI", "HAFIZH ABDILLA", "HILALIA NAZWA", "ILHAM SUJANI", "IMELIA AGUSTINA", "IRHAB LABIB MUKTABAR", "IZMA MURSHIDA", "KAILLA DEALANI PUTRI", "MUFIIDAH TRI BUDIYANTI", "MUHAMAD AYUB KHAIRULLY NUR RAMDHANI", "MUHAMMAD ELFARINO WIBISANA", "MUHAMMAD FACHRI AL FATHIR", "MUHAMMAD VANJI NURDWICAHYA", "NAFISA JAHRAHNI", "NAUFAL HENDRIANA PAMUNGKAS", "NAZRI ARFAN MAULANA", "NOVIA DWIMUSTIKA", "RAFKA ALJABARI", "RAIHAN MUHAMMAD FATTAH ARDIANSYAH", "RAISSA RACHEL KHALISSA", "RIEMANDA BIANCA PUTRIDINATA", "RIFA SETIAWAN", "RISKA RAHMAWATI", "RIZKI DWI ARRAHMAN HANDAYANTO", "SRI MULYANI", "SYIFA PUTRI RAHMAT", "ZAHIRA YUSRINA MAULIDA"], "X E-8": ["ABAM IBRAHIM", "AL ZAMI HAMBALI", "ALESSYA ZHAFIRAH NAZWA YUDAWISASTRA", "ALFI GAMA RUSTIAN", "ALIEF RIZAL JANUAR", "AMYRA AYU ZIVANA", "DILLA NURWINDA", "FILZA KAMILAH MUTTAQIN", "HAIKAL FAUZAN ZAMAN", "HASNA MAULIDA", "INTAN WIJAYANTI", "KAYLA LEANDRA", "KEISHA ELVIRA", "KOLBIATUS SHOFI ANA", "LUCKY MOCHAMMAD IQBAL", "MELVINA NADA NUR FAJRINA", "MUHAMAD DENI RAMDANI", "MUHAMAD FARREL FEBRIANSYAH", "MUHAMAD RIZWAN", "MUHAMMAD ARGIA ALHADY", "MUHAMMAD NURZAMAN AL ROFIQI", "NAILA ALFAATAYA NADHIFA", "NAUFAL FATHIR RAHMAN", "NAZMIA APRILLA PUTRI", "QUEENNA RATIH AZZAHRA", "RABYAN ALFHATUNNISA FAUZI", "RAFLY", "RAHMA ALYA DARANTIKA", "RAIHAN RAMADHAN", "REGGIA PUTRI FIDIYANI", "REHANDI", "REYGHA APRILIANA ROSADI", "RINZI TEGAR NURIMANI", "RISNAWATI", "RIVA FATHURROHMAN", "RIZKI MUHAMMAD PUTRA", "SALMA NURRITA RISTY", "SALSABILA KHOOSYI RAHENDRA", "SALWA AZKIA SAQINA", "SIFA KHOERUNISA", "SITI AZQA KHONITA", "YOGA RIJIK FACHRUZI"], "X E-9": ["ADINDA PRATAMI PUTRI", "AGNI FAUZIAH KHAMSATUL MALIA", "AHMAD SALITHUN FAKHRUROJI", "AI HAMIDAH", "AL KHANSA RAFIYQAH PUTRI BHAYANGKARI", "ALIFIA AZI ZAHRA", "AMEL DWI APRIYANTI", "ANDRIAS PUTRA", "ANNISA ASSYIFA RACHMAWATI", "BIANCA NINDIA PUTRI", "DAFFA ARDIANSYAH", "FATAA ANNABA NURUL ARB`A ALFATH", "GANJAR MUHAMMAD IHSAN MULYANA", "GHIAS MAULA ROHIDIN", "GOHVI AKBAR VANDOVA", "HASBY ELFAN HAJIB", "HERMAN IRAWAN", "IRHAM SHIDDIQ MAULANA", "JIHAN APRILIA NURAZIZAH", "KANAYA NURLATIFANISSA", "LAILA SYARIFA ROSYDAH", "LUTFI RAHMAN FADILLAH", "MOCHAMAD RASSYA AL PASHA", "MUHAMAD FAKHRI FIRDAUS SIRADJ", "MUHAMAD ILHAM MAULANA SIDIK", "MUHAMAD SHAID PURNAMA", "MUHAMAD TEGAR", "MUHAMMAD ZALDY FERDIANSYAH SETIADI", "NADHIRA FITRIA NURAZIZAH", "NAURA AQILA FATHIYYAH", "NURI SAFINA", "QEYSYA AINIGARNISUN", "RAFI ARIPIN ILHAM", "REYHAN ARFARY REZA", "RIFKI KURNIAWAN", "RIZKY ANUGRAH", "SAKINAH PEBRIYANTI", "SASKIA OKTAVIANI MULYADI", "SETIA MAHARANI", "SHEYNI NUR CAHYA", "SRI KAILA ROBI`AH", "TSABIT AZMI MUFID"], "X E-10": ["ABDILAH TEGUH TARYANA", "AIRA PUTRI AMARA", "AJRIL ILHAM KUSMAYADI", "ANGGA ARDIANSYAH", "ARDI FIKRI AL GHIFARI", "ARKAN NAFI NUGRAHA", "BINTANG FAWWAS SHADIQ", "DANISH ZAIM MUNAWAR", "DIKRI SEPTIANA KUSMAWAN", "DUDI KURDIYANSYAH", "FARHAN ZEIN ARIFIN", "FIKRI ALFIANSAH FATUROHMAN", "GHIASA TRIA KHAERANI", "GHINA CHAIRUNNISA MULIYANI", "GRISELDA YUNIRA KUSUMAH", "HAIKAL ERLANGGA", "HASNA AZKA AZ ZUKHRUF", "HASNA KIRANA", "KANAYA PEBRIANTI", "KEYLA PUTRI SHAFIRA", "MEYNANDA ZANE KHALIFFA", "MOCHAMMAD FAEYZA ATHALLAH PUTRA SOEMANTRI", "MUHAMAD ANINDRA JENAR LANGIT JABBARI", "MUHAMAD TRI JANUAR", "MUHAMMAD REVI LUTFIANSYAH", "MUHAMMAD RIZKY ALKATIRI", "MUNADI AHMAD SANI", "NATHIFA PUTRI ASMARA", "NAZWA ALIFAH", "NAZWA AURELIA", "RAFAN FATIR SARFARAZ", "REHAN ADITIA RHAMADHAN", "REISYA SYAWULA PUTRI", "RISMA CUCU MUHARROMAH", "ROSALINA AGATA", "SEKAR WIWITAN RAHAYUNINGTYAS", "SHOFA NURUN NISSA BTARA IUDE", "SITI NURHIDAYAH", "TANTRI HASANAH MAULINDA", "TEGUH PUTERA PANGESTU", "ZAHRAN  IZYAN AHMAD LUTHFII", "ZAZQIA DIARANY WAHYUDI"], "X E-11": ["ABDAN MURTAFA", "ACHMAD ARIFIN NURZAMAN", "ADITIA MEYSATRIA", "ALZAM MUNAWAR HAYFA", "ANNISA FITRI NURJANNAH", "ATIKAH PUTRI GUSTAYU", "AULIYA  AWALIYAH AL FAJRIYAH", "AURA PUTRY YULIA", "AVIEN EKAPUTRA BAGUS SATRIA", "BEVAN RABBANI HOUSYAR", "BRYAN NUGRAHA PAMUNGKAS", "BUNGA PUTRI LESTARI", "CINDY PERMATASARI", "DINAR AZHAR ANUGRAH", "EVANDRA GILBRAN", "FARHAN IRGIE YUDHISTIRA", "HAIKAL AZMI PRATAMA", "IBRAHIM DHAFA MA`ARIEF", "IIS NURAISAH", "KAYLA CHOERUNNISA", "KIRANA MAYANGSARI", "LABIB MUHSIN ALKAMIL", "MOCHAMAD REVAL PERMANA PUTRA", "MUHAMMAD ADHA ALZAKI", "MUHAMMAD FAISAL MAULUDDIN", "MUHAMMAD KAIS ALFARIZI", "MUHAMMAD RAFI RAIHAN RISMUNANDAR", "NANDIESA MAULIDA HERLIANA", "NAYLA SALSA TEANA", "NESSA SOFIATU NISA", "NURUL AULIA", "RAIHAN LUTHFIANA", "RAKA PRATAMA RAMADHAN", "REZA APRILIANI", "RIPAN ANIA SALAM", "RIZQIYA ASYIFA`UN NISA", "SRI AULIYA", "SUCI FRATIWI", "TASYA AISAH KHOERUNNISSA", "TRIANA AZAHRA", "WAHYUNI LISTIANI", "WILDAN NURROHMAN"], "X E-12": ["ABIYYU AMMAR ISMAIL", "ADE ZAMZAM HAIDAR AL AZIZI", "ADRIAN SHINGGIT MUNANDAR", "ANEESA SYAUQINA AZZELIA PUTRI", "ANNISA ZALFA SYAKIRA", "AULIA ASKANA RATIFA", "AURA", "BERLIANA NOVIANTY HIDAYAT", "BRAINY QURRATU A`YUN", "CINDI AULIA RAHMADANTI", "DAFFA ALFAREZEL PERWIRANEGARA", "DEA NANDA SEPTIANI", "DENA HAFIZ MAULANA", "FAKHRI RAHMAN SOFYAN", "FARIZ AKBAR", "HAIDAR SIRAAJ", "ILHAM RIZKI MAULIDA", "IRSYAD NUR IHSAN", "JOANET KINANTI GERUNGAN", "JOLIE KESHIA NAZLA SYA", "KANIA FEBIAN UTAMI", "LUTHFI NUR`AZMI", "MUHAMAD PEBRIAN", "MUHAMAD RAPA PURNAMA", "MUHAMAD REFAN PRATAMA", "MUHAMMAD ALFAKHRIZAL ANDRIANA", "MUHAMMAD GALUH ARYA SAPUTRA", "MUHAMMAD ZAKI HERYANTO", "NASYA MOONAHALAH QUEENSHA", "NOVAL BINTANG ARDANA", "PHIERY MAHARDHIKA MULYADI", "PIETER RANULIAN", "PUTRI LESTARI", "PUTRIA RAHMA ELNIKA", "RACHEL ORLEANS ANDERTAN", "RADHIKA ADITYA", "REIHAN INDRA ALIE", "SAKIK AMINULLOH MARBAWI", "SYAHLA SHABIRA HELMI", "VERAWATI VAJRIN AZIZ", "YURI NUR AWWALI ISNAENI", "ZAHIRA ADELIA YASMIN"]};
+
+      // Ambil seluruh kelas dari Local Storage dan gabungkan dengan Database Bawaan
+      const localData = JSON.parse(localStorage.getItem('savedClasses') || '{}');
+      savedClasses = { ...DATABASE_BAWAAN, ...localData };
+      
+      // Migrasi data lama jika ada (dari versi sebelumnya yang hanya simpan 1 kelas)
+      const oldRoster = JSON.parse(localStorage.getItem('savedRoster') || '[]');
+      const oldClassName = localStorage.getItem('savedRosterClass');
+      if (oldRoster.length > 0 && oldClassName && !savedClasses[oldClassName]) {
+        savedClasses[oldClassName] = oldRoster;
+        localStorage.setItem('savedClasses', JSON.stringify(savedClasses));
+        localStorage.removeItem('savedRoster'); // Hapus yang lama
+      }
+      
+      populateClassDropdown();
+      
+      // Tampilkan kontainer roster jika ada kelas yang tersimpan
+      if (Object.keys(savedClasses).length > 0) {
+        document.getElementById('rosterPool').style.display = 'block';
+      }
+      
+      // Jika ada kelas terakhir yang dibuka, atau pilih kelas pertama secara default
+      let activeClass = oldClassName;
+      if (!activeClass && Object.keys(savedClasses).length > 0) {
+        activeClass = Object.keys(savedClasses)[0];
+      }
+
+      if(activeClass && savedClasses[activeClass]) {
+        document.getElementById('classSelector').value = activeClass;
+        renderRosterPool(savedClasses[activeClass], activeClass);
+        document.getElementById('sheetName').value = `Penilaian ${activeClass}`;
+      } else {
+        document.getElementById('classSelector').value = "";
+        document.getElementById('rosterChips').innerHTML = '';
+      }
+    });
+
+    function populateClassDropdown() {
+      const select = document.getElementById('classSelector');
+      select.innerHTML = '<option value="" disabled selected>-- Pilih Kelas --</option>';
+      for (const className in savedClasses) {
+        const opt = document.createElement('option');
+        opt.value = className;
+        opt.innerText = className;
+        select.appendChild(opt);
+      }
+    }
+
+    function loadSelectedClass() {
+      const className = document.getElementById('classSelector').value;
+      if (className && savedClasses[className]) {
+        localStorage.setItem('savedRosterClass', className);
+        renderRosterPool(savedClasses[className], className);
+        document.getElementById('sheetName').value = `Penilaian ${className}`;
+      } else {
+        document.getElementById('rosterChips').innerHTML = '';
+      }
+    }
+
+    function renderRosterPool(studentList, className) {
+      currentRoster = studentList;
+      const container = document.getElementById('rosterChips');
+      container.innerHTML = '';
+      
+      studentList.forEach(name => {
+        if(!name.trim()) return;
+        const chip = document.createElement('div');
+        chip.className = 'student-chip';
+        chip.innerText = name.trim();
+        chip.dataset.name = name.trim();
+        chip.onclick = () => handleChipClick(chip, name.trim());
+        container.appendChild(chip);
+      });
+      
+      document.getElementById('rosterPool').style.display = 'block';
+      checkUsedChips();
+    }
+
+    function handleChipClick(chip, name) {
+      SoundFX.click();
+      if(chip.classList.contains('used')) return;
+      
+      if(activePlayerInput) {
+        activePlayerInput.value = name;
+        chip.classList.add('used');
+        
+        const allInputs = Array.from(document.querySelectorAll('.player-input'));
+        const currentIndex = allInputs.indexOf(activePlayerInput);
+        
+        let nextInput = null;
+        for(let i = currentIndex + 1; i < allInputs.length; i++) {
+          if(allInputs[i].value === "") { nextInput = allInputs[i]; break; }
+        }
+        
+        if(nextInput) { nextInput.focus({ preventScroll: true }); } 
+        else { activePlayerInput.blur(); activePlayerInput.classList.remove('active-input'); activePlayerInput = null; }
+        
+        checkUsedChips();
+      } else {
+        showToast("Pilih kotak posisi di bawah terlebih dahulu!");
+      }
+    }
+
+    function checkUsedChips() {
+      const allInputs = Array.from(document.querySelectorAll('.player-input'));
+      const usedNames = allInputs.map(input => input.value.trim().toLowerCase());
+      
+      const chips = document.querySelectorAll('.student-chip');
+      chips.forEach(chip => {
+        if(usedNames.includes(chip.dataset.name.toLowerCase())) { chip.classList.add('used'); }
+        else { chip.classList.remove('used'); }
+      });
+    }
+
+    function clearRoster() { document.getElementById('rosterPool').style.display = 'none'; }
+
+    function saveToLocalRoster() {
+      const listStr = document.getElementById('manualStudentList').value;
+      const className = document.getElementById('manualClassName').value || 'Kelas Kustom';
+      if(!listStr.trim()) return alert("Daftar murid kosong!");
+      
+      const names = listStr.split('\n').filter(n => n.trim() !== '');
+      
+      savedClasses[className] = names;
+      localStorage.setItem('savedClasses', JSON.stringify(savedClasses));
+      localStorage.setItem('savedRosterClass', className);
+      
+      populateClassDropdown();
+      document.getElementById('classSelector').value = className;
+      
+      renderRosterPool(names, className);
+      closeDatabaseModal();
+      showToast("Kelas Tersimpan secara Offline!");
+      SoundFX.success();
+    }
+
+
+    let criteriaPlayer = JSON.parse(localStorage.getItem('critPlayer')) || [
+      { id: "P1", name: "Keterampilan Gerak", desc1: "Melakukan dengan banyak kesalahan.", desc2: "Cukup bisa walau kurang konsisten.", desc3: "Menerapkan dengan akurasi baik.", desc4: "Akurasi tinggi dan postur sempurna." },
+      { id: "P2", name: "Taktik & Strategi", desc1: "Bermain tanpa strategi.", desc2: "Mulai paham tapi eksekusi keliru.", desc3: "Mampu menempatkan bola.", desc4: "Sangat efektif mencari celah." },
+      { id: "P3", name: "Karakter (Pancasila)", desc1: "Individualis / tidak sportif.", desc2: "Kurang aktif kolaborasi.", desc3: "Sportif dan kerja sama.", desc4: "Proaktif, sportif, regulasi emosi baik." },
+      { id: "P4", name: "Peraturan Voli", desc1: "Tidak paham rotasi.", desc2: "Sering salah rotasi.", desc3: "Paham dengan sedikit panduan.", desc4: "Menguasai penuh tanpa kesalahan." }
+    ];
+
+    let criteriaOfficial = JSON.parse(localStorage.getItem('critOfficial')) || [
+      { id: "O1", name: "Penguasaan Aturan", desc1: "Banyak salah putusan.", desc2: "Paham tapi ragu.", desc3: "Bisa memutuskan in/out.", desc4: "Menerapkan seluruh aturan sempurna." },
+      { id: "O2", name: "Ketegasan Keputusan", desc1: "Selalu ragu.", desc2: "Cukup tegas.", desc3: "Tegas meniup peluit.", desc4: "Sangat objektif dan independen." },
+      { id: "O3", name: "Fokus & Tanggung Jawab", desc1: "Sering lengah.", desc2: "Cukup fokus.", desc3: "Bertanggung jawab.", desc4: "Fokus tinggi dari awal hingga akhir." }
+    ];
+
+    const scoreLabels = ["Berkembang", "Layak", "Cakap", "Mahir"];
+    let allParticipants = []; let benchedParticipants = []; let activeNodeId = null; 
+    let scoreTeamA = 0; let scoreTeamB = 0; let nameTeamA = "Tim A"; let nameTeamB = "Tim B";
+    let currentServe = null;
+    let currentEditorTab = 'player';
+    
+    let savedMatches = JSON.parse(localStorage.getItem('savedMatches') || '[]');
+    updateCloudButton();
+
+    function updateCloudButton() {
+      const btn = document.getElementById('btnUploadCloud');
+      const count = document.getElementById('syncCount');
+      if(savedMatches.length > 0) { btn.style.display = 'flex'; count.innerText = savedMatches.length; } 
+      else { btn.style.display = 'none'; }
+    }
+
+    function openCriteriaEditor() { document.getElementById('editorOverlay').classList.add('active'); document.getElementById('criteriaEditor').classList.add('active'); renderEditor(); }
+    function closeCriteriaEditor() { document.getElementById('editorOverlay').classList.remove('active'); document.getElementById('criteriaEditor').classList.remove('active'); }
+    function switchEditorTab(tab) { currentEditorTab = tab; document.getElementById('tabPemain').classList.toggle('active', tab === 'player'); document.getElementById('tabPerangkat').classList.toggle('active', tab === 'official'); renderEditor(); }
+    function renderEditor() {
+      const arr = currentEditorTab === 'player' ? criteriaPlayer : criteriaOfficial;
+      let html = '';
+      arr.forEach((c, idx) => {
+        html += `<div class="editor-group" id="eg-${c.id}">
+            <button class="btn-remove-crit" onclick="SoundFX.click(); removeCriteria('${c.id}')"><i class="fas fa-trash"></i></button>
+            <label>Judul Kriteria ${idx+1}</label>
+            <input type="text" id="ed-name-${c.id}" value="${c.name}" style="width:100%" placeholder="Nama Kriteria">
+            <label style="margin-top:8px;">Deskripsi 1</label><textarea id="ed-d1-${c.id}">${c.desc1}</textarea>
+            <label>Deskripsi 2</label><textarea id="ed-d2-${c.id}">${c.desc2}</textarea>
+            <label>Deskripsi 3</label><textarea id="ed-d3-${c.id}">${c.desc3}</textarea>
+            <label>Deskripsi 4</label><textarea id="ed-d4-${c.id}">${c.desc4}</textarea>
+          </div>`;
+      });
+      document.getElementById('editorContent').innerHTML = html;
+    }
+    
+    function addNewCriteria() {
+      const arr = currentEditorTab === 'player' ? criteriaPlayer : criteriaOfficial;
+      const newId = 'C' + Math.random().toString(36).substr(2, 5);
+      arr.push({ id: newId, name: 'Kriteria Baru', desc1: '', desc2: '', desc3: '', desc4: '' });
+      renderEditor();
+    }
+    
+    function removeCriteria(id) {
+      if(confirm('Hapus kriteria ini?')) {
+        if(currentEditorTab === 'player') criteriaPlayer = criteriaPlayer.filter(x => x.id !== id);
+        else criteriaOfficial = criteriaOfficial.filter(x => x.id !== id);
+        renderEditor();
+      }
+    }
+
+    function saveCriteriaEditor() {
+      criteriaPlayer.forEach(c => { const n = document.getElementById(`ed-name-${c.id}`); if(n) { c.name = n.value; c.desc1 = document.getElementById(`ed-d1-${c.id}`).value; c.desc2 = document.getElementById(`ed-d2-${c.id}`).value; c.desc3 = document.getElementById(`ed-d3-${c.id}`).value; c.desc4 = document.getElementById(`ed-d4-${c.id}`).value; } });
+      criteriaOfficial.forEach(c => { const n = document.getElementById(`ed-name-${c.id}`); if(n) { c.name = n.value; c.desc1 = document.getElementById(`ed-d1-${c.id}`).value; c.desc2 = document.getElementById(`ed-d2-${c.id}`).value; c.desc3 = document.getElementById(`ed-d3-${c.id}`).value; c.desc4 = document.getElementById(`ed-d4-${c.id}`).value; } });
+      localStorage.setItem('critPlayer', JSON.stringify(criteriaPlayer)); localStorage.setItem('critOfficial', JSON.stringify(criteriaOfficial));
+      showToast("Kriteria Tersimpan (Lokal)!"); closeCriteriaEditor();
+    }
+
+    function handleCSVUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        const rows = text.split(/\r?\n/);
+        
+        let startIndex = 0;
+        let nameColIdx = -1;
+        let classColIdx = -1;
+        
+        if (rows.length > 0) {
+          const headerCols = rows[0].split(/[,;]/).map(c => c.trim().toLowerCase().replace(/^["']|["']$/g, ''));
+          nameColIdx = headerCols.findIndex(col => col.includes('nama') || col.includes('name'));
+          classColIdx = headerCols.findIndex(col => col.includes('kelas') || col.includes('class') || col.includes('rombel'));
+          
+          if (nameColIdx !== -1 || classColIdx !== -1) {
+            startIndex = 1; // Lewati header
+          }
+        }
+        
+        let parsedClasses = {};
+        let singleClassNames = [];
+        
+        for(let i = startIndex; i < rows.length; i++) {
+          const row = rows[i].trim();
+          if(!row) continue;
+          
+          const cols = row.split(/[,;]/);
+          let name = "";
+          let className = "";
+          
+          // 1. Ekstrak Nama
+          if (nameColIdx !== -1 && cols.length > nameColIdx) {
+            name = cols[nameColIdx].trim();
+          } else {
+            for(let j=0; j<cols.length; j++) {
+              let val = cols[j].trim().replace(/^["']|["']$/g, '');
+              if(isNaN(val) && val.length > 3 && j !== classColIdx) {
+                 name = val; break;
+              }
+            }
+            if(!name && cols.length > 0) name = cols[0].trim();
+          }
+          name = name.replace(/^["']|["']$/g, '');
+          
+          // 2. Ekstrak Kelas
+          if (classColIdx !== -1 && cols.length > classColIdx) {
+            className = cols[classColIdx].trim().replace(/^["']|["']$/g, '');
+          }
+          
+          if(name) {
+             if (className) {
+                if (!parsedClasses[className]) parsedClasses[className] = [];
+                parsedClasses[className].push(name);
+             } else if (classColIdx !== -1) {
+                if (!parsedClasses["Tanpa Kelas"]) parsedClasses["Tanpa Kelas"] = [];
+                parsedClasses["Tanpa Kelas"].push(name);
+             } else {
+                singleClassNames.push(name);
+             }
+          }
+        }
+        
+        const parsedKeys = Object.keys(parsedClasses);
+        
+        if (parsedKeys.length > 0) {
+          // BATCH IMPORT MULTIPLE CLASSES
+          let totalStudents = 0;
+          parsedKeys.forEach(k => {
+             savedClasses[k] = parsedClasses[k];
+             totalStudents += parsedClasses[k].length;
+          });
+          
+          localStorage.setItem('savedClasses', JSON.stringify(savedClasses));
+          populateClassDropdown();
+          
+          document.getElementById('rosterPool').style.display = 'block';
+          document.getElementById('classSelector').value = "";
+          document.getElementById('rosterChips').innerHTML = '';
+          
+          // Jangan tutup modal, biarkan pengguna klik Push Firebase
+          document.getElementById('manualClassName').value = `Multi-Kelas (${parsedKeys.length} kelas)`;
+          document.getElementById('manualStudentList').value = "Berhasil mengimpor kelas:\n" + parsedKeys.join('\n') + "\n\nSilakan klik 'Push Firebase' untuk menyimpan semua data ini ke Cloud Anda.";
+
+          showToast(`Berhasil mengimpor ${parsedKeys.length} kelas dengan total ${totalStudents} murid!`);
+          SoundFX.success();
+          
+        } else if(singleClassNames.length > 0) {
+          // SINGLE CLASS FALLBACK
+          const textarea = document.getElementById('manualStudentList');
+          textarea.value = singleClassNames.join('\n');
+          
+          const classNameInput = document.getElementById('manualClassName');
+          if (!classNameInput.value || classNameInput.value === 'Kelas Kustom') {
+            classNameInput.value = file.name.replace(/\.[^/.]+$/, "");
+          }
+          
+          showToast(`Berhasil membaca ${singleClassNames.length} nama dari CSV!`);
+          SoundFX.success();
+        } else {
+          alert('Tidak menemukan data nama yang valid di file CSV.');
+        }
+      };
+      reader.onerror = function() { alert('Gagal membaca file CSV.'); };
+      reader.readAsText(file);
+      event.target.value = '';
+    }
+
+    function openClassStatus() {
+      document.getElementById('statusOverlay').classList.add('active'); document.getElementById('statusModal').classList.add('active');
+      let assessedNames = new Set();
+      savedMatches.forEach(match => { match.students.forEach(s => assessedNames.add(s.studentName.toLowerCase())); });
+      
+      let html = '';
+      currentRoster.forEach(nm => {
+        const isDone = assessedNames.has(nm.toLowerCase());
+        const icon = isDone ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-times-circle"></i>';
+        const cssClass = isDone ? 'done' : 'wait';
+        html += `<div class="status-item ${cssClass}">${icon} ${nm}</div>`;
+      });
+      document.getElementById('statusListContent').innerHTML = html;
+    }
+    function closeClassStatus() { document.getElementById('statusOverlay').classList.remove('active'); document.getElementById('statusModal').classList.remove('active'); }
+
+    function resetAllPositions() {
+      if(!confirm("Yakin ingin mengosongkan seluruh nama di semua posisi?")) return;
+      document.querySelectorAll('.player-input').forEach(input => input.value = '');
+      checkUsedChips();
+      SoundFX.click();
+      showToast("Semua posisi dikosongkan");
+    }
+
+    function startAssessment() {
+      nameTeamA = document.getElementById('teamAName').value.trim() || 'Tim A'; nameTeamB = document.getElementById('teamBName').value.trim() || 'Tim B';
+      document.getElementById('sbNameA').innerText = nameTeamA; document.getElementById('sbNameB').innerText = nameTeamB;
+
+      allParticipants = []; const posIds = ['p1', 'p2', 'p3', 'p4', 'p5', 'p6'];
+      posIds.forEach((p, idx) => { const n = document.getElementById('in-A-'+p).value.trim(); if(n) allParticipants.push(createParticipant(`A_${idx}`, n, 'player', nameTeamA, `pos-A_${p}`)); });
+      posIds.forEach((p, idx) => { const n = document.getElementById('in-B-'+p).value.trim(); if(n) allParticipants.push(createParticipant(`B_${idx}`, n, 'player', nameTeamB, `pos-B_${p}`)); });
+      
+      const officials = [
+        { idIn: 'W1', posClass: 'pos-W1', roleName: 'Wasit Utama' }, { idIn: 'W2', posClass: 'pos-W2', roleName: 'Wasit 2' },
+        { idIn: 'HG1', posClass: 'pos-HG1', roleName: 'Hakim Garis 1' }, { idIn: 'HG2', posClass: 'pos-HG2', roleName: 'Hakim Garis 2' },
+        { idIn: 'HG3', posClass: 'pos-HG3', roleName: 'Hakim Garis 3' }, { idIn: 'HG4', posClass: 'pos-HG4', roleName: 'Hakim Garis 4' },
+        { idIn: 'Scorer', posClass: 'pos-Scorer', roleName: 'Pencatat Skor' },
+        { idIn: 'PelatihA', posClass: 'pos-PelatihA', roleName: 'Pelatih Tim A' }, { idIn: 'PelatihB', posClass: 'pos-PelatihB', roleName: 'Pelatih Tim B' },
+        { idIn: 'Komentator', posClass: 'pos-Komentator', roleName: 'Komentator' }, { idIn: 'Medis', posClass: 'pos-Medis', roleName: 'Tim Medis' }
+      ];
+      officials.forEach((off, idx) => { const n = document.getElementById('in-O-'+off.idIn).value.trim(); if(n) allParticipants.push(createParticipant(`O_${idx}`, n, 'official', off.roleName, off.posClass)); });
+
+      if(allParticipants.length === 0) return showToast('Minimal isi 1 anak!');
+
+      const serveInput = prompt(`Siapa yang memegang servis pertama? Ketik 'A' untuk ${nameTeamA} atau 'B' untuk ${nameTeamB}:`, "A");
+      currentServe = (serveInput && serveInput.toUpperCase() === 'B') ? 'B' : 'A';
+      updateServeIndicator();
+
+      SoundFX.whistle(); // BUNYIKAN PELUIT SAAT MULAI PERTANDINGAN
+
+      document.body.classList.add('live-mode');
+      document.getElementById('setupView').style.display = 'none'; 
+      document.getElementById('assessmentView').classList.add('active-flex');
+      
+      buildDOMNodesOnce();
+    }
+
+    function updateServeIndicator() {
+      document.getElementById('serveA').classList.toggle('active', currentServe === 'A');
+      document.getElementById('serveB').classList.toggle('active', currentServe === 'B');
+    }
+
+    function createParticipant(idStr, fullName, roleType, teamOrRoleLabel, initialPosClass) { 
+      let parts = fullName.trim().split(' ');
+      let short = parts[0];
+      if (parts.length > 1 && ['muhammad', 'muhamad', 'mochamad', 'mohamad', 'mohammad', 'muchamad', 'm', 'm.'].includes(parts[0].toLowerCase())) {
+        short = 'M. ' + parts[1];
+      }
+      return { id: 'node_' + idStr, name: fullName, shortName: short, role: roleType, team: teamOrRoleLabel, currentPosClass: initialPosClass, scores: {}, badges: [], notes: '' }; 
+    }
+
+    function buildDOMNodesOnce() {
+      const container = document.getElementById('courtNodes'); let html = '';
+      allParticipants.forEach(p => {
+        const baseClass = p.role === 'official' ? 'player-node official' : (p.currentPosClass.includes('pos-B') ? 'player-node teamB' : 'player-node teamA');
+        const critLength = p.role === 'player' ? criteriaPlayer.length : criteriaOfficial.length;
+        html += `<div id="${p.id}" class="${baseClass} ${p.currentPosClass}" onclick="SoundFX.click(); openScoringSheet('${p.id}')">
+            <div class="name">${p.shortName}</div><div class="progress" id="prog-${p.id}">0/${critLength}</div>
+          </div>`;
+      });
+      container.innerHTML = html;
+    }
+
+    function updateDOMPositions() { allParticipants.forEach(p => { const el = document.getElementById(p.id); if(el) el.className = el.className.replace(/pos-[\w_]+/g, '').trim() + ' ' + p.currentPosClass; }); }
+
+    function rotateTeam(teamPrefix) {
+      SoundFX.rotation(); // BUNYIKAN EFEK SWEEP SAAT ROTASI
+      const rotSequence = [`pos-${teamPrefix}_p1`, `pos-${teamPrefix}_p6`, `pos-${teamPrefix}_p5`, `pos-${teamPrefix}_p4`, `pos-${teamPrefix}_p3`, `pos-${teamPrefix}_p2`];
+      let playersInRotation = []; rotSequence.forEach(posClass => playersInRotation.push(allParticipants.find(p => p.currentPosClass === posClass)));
+
+      const newPosAssignments = [];
+      newPosAssignments[1] = playersInRotation[0]; newPosAssignments[2] = playersInRotation[1]; newPosAssignments[3] = playersInRotation[2];
+      newPosAssignments[4] = playersInRotation[3]; newPosAssignments[5] = playersInRotation[4]; newPosAssignments[0] = playersInRotation[5];
+
+      for(let i=0; i<6; i++) { if(newPosAssignments[i]) newPosAssignments[i].currentPosClass = rotSequence[i]; }
+      updateDOMPositions();
+    }
+
+    function changeScore(team, amount) {
+      if(amount > 0) SoundFX.ballHit(); // BUNYIKAN BOLA SAAT TAMBAH SKOR
+      if(team === 'A') { 
+        scoreTeamA = Math.max(0, scoreTeamA + amount); document.getElementById('scoreA').innerText = scoreTeamA; 
+        if(amount > 0 && currentServe === 'B') { currentServe = 'A'; rotateTeam('A'); updateServeIndicator(); }
+      } else { 
+        scoreTeamB = Math.max(0, scoreTeamB + amount); document.getElementById('scoreB').innerText = scoreTeamB; 
+        if(amount > 0 && currentServe === 'A') { currentServe = 'B'; rotateTeam('B'); updateServeIndicator(); }
+      }
+      checkWinCondition();
+    }
+
+    function checkWinCondition() {
+      if ((scoreTeamA >= 25 && scoreTeamA - scoreTeamB >= 2) || (scoreTeamB >= 25 && scoreTeamB - scoreTeamA >= 2)) {
+        SoundFX.success(); startConfetti(); showToast("SET SELESAI!");
+      }
+    }
+
+    // --- RUBRIK & SHEET ---
+    let tooltipTimeout;
+    function showRubricTooltip(event, criteriaId, isPlayer) {
+      SoundFX.click();
+      const arr = isPlayer ? criteriaPlayer : criteriaOfficial; const c = arr.find(x => x.id === criteriaId);
+      const tt = document.getElementById('customTooltip');
+      tt.innerHTML = `<strong>1:</strong> ${c.desc1}<br><br><strong>2:</strong> ${c.desc2}<br><br><strong>3:</strong> ${c.desc3}<br><br><strong>4:</strong> ${c.desc4}`;
+      tt.classList.add('show');
+      clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => tt.classList.remove('show'), 6000); event.stopPropagation();
+    }
+    document.addEventListener('click', () => { document.getElementById('customTooltip').classList.remove('show'); });
+
+    function openScoringSheet(nodeId) {
+      activeNodeId = nodeId; const p = allParticipants.find(x => x.id === nodeId);
+      document.getElementById('sheetStudentName').innerText = p.name; document.getElementById('sheetRoleLabel').innerText = p.role === 'player' ? p.team : p.team; 
+
+      const activeCriteriaList = p.role === 'player' ? criteriaPlayer : criteriaOfficial; let html = '';
+      activeCriteriaList.forEach(c => {
+        let btns = '';
+        for(let i=1; i<=4; i++) {
+          const selected = p.scores[c.id] === i ? 'selected' : '';
+          btns += `<button class="s-btn ${selected}" id="sbtn-${c.id}-${i}" onclick="setScore('${c.id}', ${i}, '${p.role}')">${i}<span>${scoreLabels[i-1]}</span></button>`;
+        }
+        html += `<div class="crit-row"><div class="crit-name">${c.name} <i class="fas fa-info-circle tooltip-icon" onclick="showRubricTooltip(event, '${c.id}', ${p.role === 'player'})"></i></div><div class="score-btns">${btns}</div></div>`;
+      });
+      document.getElementById('criteriaListUI').innerHTML = html;
+      document.getElementById('sheetNotes').value = p.notes;
+      renderBadgesSheet(p);
+      
+      if (p.role === 'official') {
+        document.getElementById('btnSubstitute').style.display = 'inline-block';
+        document.getElementById('btnRemoveOfficial').style.display = 'inline-block';
+      } else {
+        document.getElementById('btnSubstitute').style.display = 'inline-block';
+        document.getElementById('btnRemoveOfficial').style.display = 'none';
+      }
+
+      document.getElementById('sheetOverlay').classList.add('active'); 
+      document.getElementById('scoringSheet').classList.add('active');
+    }
+
+    function toggleBadge(type) {
+      SoundFX.click();
+      const p = allParticipants.find(x => x.id === activeNodeId);
+      if(p.badges.includes(type)) { p.badges = p.badges.filter(b => b !== type); }
+      else { p.badges.push(type); }
+      renderBadgesSheet(p); updateBadgeNode(p);
+    }
+
+    function renderBadgesSheet(p) {
+      document.getElementById('btnBadge-star').style.background = p.badges.includes('star') ? '#fef08a' : '#e2e8f0';
+      document.getElementById('btnBadge-star').style.color = p.badges.includes('star') ? '#b45309' : '#1e293b';
+      document.getElementById('btnBadge-yellow').style.background = p.badges.includes('yellow') ? '#facc15' : '#e2e8f0';
+      document.getElementById('btnBadge-yellow').style.color = p.badges.includes('yellow') ? '#854d0e' : '#1e293b';
+      document.getElementById('btnBadge-red').style.background = p.badges.includes('red') ? '#f87171' : '#e2e8f0';
+      document.getElementById('btnBadge-red').style.color = p.badges.includes('red') ? '#7f1d1d' : '#1e293b';
+    }
+
+    function updateBadgeNode(p) {
+      const el = document.getElementById(p.id);
+      let existing = el.querySelector('.badge-icon'); if(existing) existing.remove();
+      if(p.badges.length > 0) {
+        let iconStr = p.badges.includes('red') ? '🟥' : (p.badges.includes('yellow') ? '🟨' : '⭐');
+        el.innerHTML += `<div class="badge-icon">${iconStr}</div>`;
+      }
+    }
+
+    function closeSheet() { 
+      SoundFX.click(); 
+      const p = allParticipants.find(x => x.id === activeNodeId);
+      if(p) p.notes = document.getElementById('sheetNotes').value;
+      document.getElementById('sheetOverlay').classList.remove('active'); document.getElementById('scoringSheet').classList.remove('active'); activeNodeId = null; 
+    }
+
+    function setScore(criteriaId, score, role) {
+      SoundFX.click(); // BUNYIKAN KLIK SAAT MENILAI
+      const p = allParticipants.find(x => x.id === activeNodeId); p.scores[criteriaId] = score;
+      for(let i=1; i<=4; i++) { const btn = document.getElementById(`sbtn-${criteriaId}-${i}`); if(btn) btn.classList.remove('selected'); }
+      document.getElementById(`sbtn-${criteriaId}-${score}`).classList.add('selected');
+
+      let totalAssessed = 0; 
+      const activeCriteriaList = role === 'player' ? criteriaPlayer : criteriaOfficial;
+      activeCriteriaList.forEach(c => { if(p.scores[c.id] > 0) totalAssessed++; });
+      const progEl = document.getElementById(`prog-${activeNodeId}`);
+      if(progEl) { 
+        progEl.innerText = `${totalAssessed}/${activeCriteriaList.length}`; 
+        if(totalAssessed === activeCriteriaList.length) { progEl.parentElement.classList.add('complete'); }
+        else { progEl.parentElement.classList.remove('complete'); }
+      }
+    }
+
+    function substitutePlayer() {
+      document.getElementById('sheetOverlay').classList.remove('active'); document.getElementById('scoringSheet').classList.remove('active');
+      
+      const select = document.getElementById('subSelectStudent');
+      select.innerHTML = '<option value="" disabled selected>Pilih nama murid pengganti...</option>';
+      const activeNames = allParticipants.map(p => p.name);
+      currentRoster.forEach(name => {
+        if(!activeNames.includes(name)) {
+          select.innerHTML += `<option value="${name}">${name}</option>`;
+        }
+      });
+      
+      document.getElementById('subOverlay').classList.add('active'); 
+      document.getElementById('subModal').classList.add('active');
+    }
+
+    function closeSubModal() { document.getElementById('subOverlay').classList.remove('active'); document.getElementById('subModal').classList.remove('active'); }
+
+    function removeOfficial() {
+      if(!confirm("Hapus perangkat ini dari lapangan?\nData nilai yang sudah diisi akan tetap tersimpan di riwayat kelas.")) return;
+      
+      const pIndex = allParticipants.findIndex(x => x.id === activeNodeId);
+      if(pIndex > -1) {
+        const p = allParticipants[pIndex];
+        SoundFX.success(); // Pakai suara sukses
+        benchedParticipants.push(JSON.parse(JSON.stringify(p))); // simpan datanya
+        allParticipants.splice(pIndex, 1);
+        
+        const nodeEl = document.getElementById(p.id);
+        if(nodeEl) nodeEl.remove();
+        
+        closeSheet(); showToast(`Perangkat berhasil dihapus.`);
+        activeNodeId = null;
+      }
+    }
+
+    function confirmSubstitute() {
+      const newName = document.getElementById('subSelectStudent').value;
+      if(!newName) return alert("Pilih nama murid terlebih dahulu!");
+      
+      const p = allParticipants.find(x => x.id === activeNodeId);
+      SoundFX.success(); // BUNYI SUKSES
+      benchedParticipants.push(JSON.parse(JSON.stringify(p))); 
+      p.name = newName; p.shortName = newName.split(' ')[0]; p.scores = {}; p.badges = []; p.notes = '';
+      
+      const nodeEl = document.getElementById(p.id); nodeEl.querySelector('.name').innerText = p.shortName;
+      updateBadgeNode(p);
+      const critLength = p.role === 'player' ? criteriaPlayer.length : criteriaOfficial.length;
+      nodeEl.querySelector('.progress').innerText = `0/${critLength}`; nodeEl.classList.remove('complete');
+      
+      closeSubModal(); showToast(`Substitusi Berhasil.`);
+      activeNodeId = null;
+    }
+
+    // --- MANUAL ACTIONS & SET 2 ---
+    function closeManualMenu() { document.getElementById('manualOverlay').classList.remove('active'); document.getElementById('manualMenu').classList.remove('active'); }
+    
+    function rotateTeamUndo(teamPrefix) {
+      SoundFX.rotation();
+      const rotSequence = [`pos-${teamPrefix}_p1`, `pos-${teamPrefix}_p6`, `pos-${teamPrefix}_p5`, `pos-${teamPrefix}_p4`, `pos-${teamPrefix}_p3`, `pos-${teamPrefix}_p2`];
+      let playersInRotation = []; rotSequence.forEach(posClass => playersInRotation.push(allParticipants.find(p => p.currentPosClass === posClass)));
+
+      const newPosAssignments = [];
+      newPosAssignments[5] = playersInRotation[0]; newPosAssignments[0] = playersInRotation[1]; newPosAssignments[1] = playersInRotation[2];
+      newPosAssignments[2] = playersInRotation[3]; newPosAssignments[3] = playersInRotation[4]; newPosAssignments[4] = playersInRotation[5];
+
+      for(let i=0; i<6; i++) { if(newPosAssignments[i]) newPosAssignments[i].currentPosClass = rotSequence[i]; }
+      updateDOMPositions();
+    }
+
+    let isCourtSwapped = false;
+    function toggleCourtSide() {
+      isCourtSwapped = !isCourtSwapped;
+      document.getElementById('courtInnerBox').classList.toggle('swapped', isCourtSwapped);
+      document.getElementById('labelTop').innerText = isCourtSwapped ? nameTeamA : nameTeamB;
+      document.getElementById('labelBot').innerText = isCourtSwapped ? nameTeamB : nameTeamA;
+      closeManualMenu(); showToast("Lapangan Bertukar!");
+    }
+
+    function resetScore() {
+      if(confirm("Yakin ingin setel ulang skor ke 0-0?")) {
+        scoreTeamA = 0; scoreTeamB = 0;
+        document.getElementById('scoreA').innerText = "0"; document.getElementById('scoreB').innerText = "0";
+        closeManualMenu();
+      }
+    }
+
+    function beginSetTwo() {
+      if(!confirm("Mulai Set 2?\nIni akan mengamankan pemain saat ini ke memori dan mengembalikan Anda ke halaman Pengaturan untuk memilih formasi baru.")) return;
+      
+      SoundFX.success();
+      allParticipants.forEach(p => { benchedParticipants.push(JSON.parse(JSON.stringify(p))); });
+      allParticipants = []; document.getElementById('courtNodes').innerHTML = '';
+      
+      scoreTeamA = 0; scoreTeamB = 0;
+      document.getElementById('scoreA').innerText = "0"; document.getElementById('scoreB').innerText = "0";
+      
+      toggleCourtSide(); closeManualMenu();
+      
+      document.getElementById('assessmentView').style.display = 'none'; 
+      document.getElementById('setupView').style.display = 'block';
+      
+      ['p1','p2','p3','p4','p5','p6'].forEach(p => {
+        document.getElementById('in-A-'+p).value = ''; document.getElementById('in-B-'+p).value = '';
+      });
+      
+      window.scrollTo(0, 0); showToast("Siap untuk Set 2! Silakan atur formasi baru.");
+    }
+
+    // --- TAMBAH PERAN MID-GAME ---
+    function openAddRoleModal() {
+      const grid = document.getElementById('massAddRoleGrid');
+      grid.innerHTML = '';
+      
+      const activeNames = allParticipants.map(p => p.name);
+      let optionsHTML = '<option value="">-- Kosong --</option>';
+      currentRoster.forEach(name => {
+        if(!activeNames.includes(name)) {
+          optionsHTML += `<option value="${name}">${name}</option>`;
+        }
+      });
+      
+      const officials = [
+        { idIn: 'W1', posClass: 'pos-W1', roleName: 'Wasit Utama' }, { idIn: 'W2', posClass: 'pos-W2', roleName: 'Wasit 2' },
+        { idIn: 'HG1', posClass: 'pos-HG1', roleName: 'Hakim Garis 1' }, { idIn: 'HG2', posClass: 'pos-HG2', roleName: 'Hakim Garis 2' },
+        { idIn: 'HG3', posClass: 'pos-HG3', roleName: 'Hakim Garis 3' }, { idIn: 'HG4', posClass: 'pos-HG4', roleName: 'Hakim Garis 4' },
+        { idIn: 'Scorer', posClass: 'pos-Scorer', roleName: 'Pencatat Skor' },
+        { idIn: 'PelatihA', posClass: 'pos-PelatihA', roleName: 'Pelatih Tim A' }, { idIn: 'PelatihB', posClass: 'pos-PelatihB', roleName: 'Pelatih Tim B' },
+        { idIn: 'Komentator', posClass: 'pos-Komentator', roleName: 'Komentator' }, { idIn: 'Medis', posClass: 'pos-Medis', roleName: 'Tim Medis' }
+      ];
+      
+      officials.forEach(off => {
+        const existing = allParticipants.find(p => p.currentPosClass === off.posClass);
+        if(!existing) {
+          grid.innerHTML += `<div class="pos-input"><span>${off.roleName}</span><select data-rolename="${off.roleName}" data-posclass="${off.posClass}" class="mass-add-select" style="width:100%; padding:8px; border:2px solid #e2e8f0; border-radius:8px; font-family:inherit; font-size: 0.9rem;">${optionsHTML}</select></div>`;
+        }
+      });
+      
+      if(grid.innerHTML === '') {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 20px; color: #64748b; font-size:0.9rem;">Semua peran perangkat sudah terisi. Gunakan Substitusi jika ingin mengganti orang.</div>';
+      }
+
+      document.getElementById('addRoleOverlay').classList.add('active'); 
+      document.getElementById('addRoleModal').classList.add('active');
+    }
+    
+    function closeAddRoleModal() { document.getElementById('addRoleOverlay').classList.remove('active'); document.getElementById('addRoleModal').classList.remove('active'); }
+    
+    function confirmAddRole() {
+      const selects = document.querySelectorAll('.mass-add-select');
+      let addedCount = 0;
+      const container = document.getElementById('courtNodes');
+      const baseClass = 'player-node official';
+
+      // Kita buat array nama terpilih untuk mencegah pengisian ganda pada submit yang sama
+      let pickedNames = [];
+
+      selects.forEach(sel => {
+        const newName = sel.value;
+        if(newName) {
+          if(pickedNames.includes(newName)) {
+            alert(`Peringatan: Nama ${newName} dipilih lebih dari satu kali! Hanya peran pertamanya yang akan diproses.`);
+            return;
+          }
+          pickedNames.push(newName);
+          
+          const roleName = sel.getAttribute('data-rolename');
+          const posClass = sel.getAttribute('data-posclass');
+          
+          const newP = createParticipant(`O_new_${Date.now()}_${addedCount}`, newName, 'official', roleName, posClass);
+          allParticipants.push(newP);
+          
+          container.insertAdjacentHTML('beforeend', `<div id="${newP.id}" class="${baseClass} ${newP.currentPosClass}" onclick="SoundFX.click(); openScoringSheet('${newP.id}')">
+            <div class="name">${newP.shortName}</div>
+            <div class="progress" id="prog-${newP.id}">0/${criteriaOfficial.length}</div>
+            <div id="badges-${newP.id}"></div>
+          </div>`);
+          addedCount++;
+        }
+      });
+      
+      if(addedCount > 0) {
+        SoundFX.success();
+        showToast(`${addedCount} Peran berhasil ditambahkan!`);
+      } else {
+        showToast("Tidak ada peran baru yang ditambahkan.");
+      }
+      closeAddRoleModal();
+    }
+
+    function saveToOfflineStorage() {
+      const pass = prompt('Masukkan kata sandi untuk menyimpan data (Default: 123456):');
+      if(pass !== '123456') { alert('Kata sandi salah!'); return; }
+      
+      if(confirm('Simpan pertandingan ini ke Memori HP?')) {
+        SoundFX.success(); // BUNYIKAN SUKSES
+        let payloadStudents = []; const allToSubmit = [...benchedParticipants, ...allParticipants];
+        const criteriaNames = [...criteriaPlayer.map(c => "(Pemain) " + c.name), ...criteriaOfficial.map(c => "(Perangkat) " + c.name)];
+
+        allToSubmit.forEach(p => {
+          let scArr = []; let totalSc = 0;
+          criteriaPlayer.forEach(c => { let s = (p.role === 'player' && p.scores[c.id]) ? p.scores[c.id] : ""; scArr.push(s); if(typeof s === 'number') totalSc += s; });
+          criteriaOfficial.forEach(c => { let s = (p.role === 'official' && p.scores[c.id]) ? p.scores[c.id] : ""; scArr.push(s); if(typeof s === 'number') totalSc += s; });
+          
+          let badgeStr = p.badges.length > 0 ? ` (Lencana: ${p.badges.join(', ')})` : '';
+          let finalNotes = (p.role === 'official' ? 'Perangkat. ' : '') + p.notes + badgeStr;
+          
+          payloadStudents.push({ 
+            studentName: p.name, 
+            teamName: p.team, 
+            scores: scArr, 
+            notes: finalNotes.trim() 
+          });
+        });
+
+        const matchPayload = { 
+          folderId: CONFIG_FOLDER_ID, 
+          sheetName: document.getElementById('sheetName').value.trim() || 'Penilaian Voli', 
+          matchScore: `${nameTeamA}: ${scoreTeamA} - ${nameTeamB}: ${scoreTeamB}`, 
+          criteriaNames: criteriaNames, 
+          playerCriteriaCount: criteriaPlayer.length,
+          officialCriteriaCount: criteriaOfficial.length,
+          students: payloadStudents 
+        };
+        savedMatches.push(matchPayload); localStorage.setItem('savedMatches', JSON.stringify(savedMatches));
+        updateCloudButton(); // Update tampilan tombol Upload Cloud
+        
+        alert(`Berhasil! Ada ${savedMatches.length} pertandingan menunggu di-upload.\n\nSusunan pemain saat ini tetap dipertahankan jika Anda ingin lanjut dengan tim yang sama.`);
+        
+        // Reset Skor Pertandingan
+        scoreTeamA = 0; scoreTeamB = 0;
+        document.getElementById('scoreA').innerText = '0';
+        document.getElementById('scoreB').innerText = '0';
+        
+        // Kembali ke Setup View (Nama pemain di input tetap ada)
+        document.body.classList.remove('live-mode');
+        document.getElementById('setupView').style.display = 'block'; 
+        document.getElementById('assessmentView').classList.remove('active-flex');
+        
+        checkUsedChips();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    async function uploadToCloud() {
+      if(!CONFIG_API_URL) return alert("GAGAL: Anda belum mensetting CONFIG_API_URL di dalam script HTML!");
+      if(savedMatches.length === 0) return alert("Tidak ada data offline yang perlu di-upload.");
+
+      SoundFX.click();
+      const btn = document.getElementById('btnUploadCloud'); btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengunggah... Jangan tutup!'; btn.disabled = true;
+
+      let successCount = 0;
+      for(let i=0; i<savedMatches.length; i++) {
+        try {
+          const res = await fetch(CONFIG_API_URL, { method: 'POST', body: JSON.stringify(savedMatches[i]) });
+          const result = await res.json();
+          if(result.success) successCount++;
+        } catch(err) { console.error("Gagal unggah data ke-" + i, err); }
+      }
+
+      if(successCount === savedMatches.length) {
+        SoundFX.success();
+        localStorage.removeItem('savedMatches');
+        alert(`Luar Biasa! ${successCount} pertandingan berhasil diamankan ke Google Spreadsheet.`);
+        location.reload();
+      } else {
+        btn.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Coba Lagi (Gagal Sebagian)'; btn.disabled = false;
+        alert(`Hanya ${successCount} dari ${savedMatches.length} yang berhasil. Periksa koneksi internet.`);
+      }
+    }
+
+    function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000); }
+
+    // ==========================================
+    // FITUR PEMETAAN KELOMPOK (GROUPING)
+    // ==========================================
+    let currentGroupingClass = '';
+    let activeTargetGroup = 'Kelompok 1';
+    let groupsDef = ['Kelompok 1', 'Kelompok 2', 'Kelompok 3', 'Kelompok 4'];
+    let studentGroupMap = {}; 
+
+    function openGroupingModal() {
+      const clsElement = document.getElementById('lkClass');
+      const cls = clsElement ? clsElement.value : '';
+      if(!cls) {
+        showToast("Pilih kelas terlebih dahulu.");
+        return;
+      }
+      currentGroupingClass = cls;
+      
+      const savedMappings = JSON.parse(localStorage.getItem('savedGroupMappings') || '{}');
+      studentGroupMap = savedMappings[currentGroupingClass] || {};
+      
+      const existingGroups = [...new Set(Object.values(studentGroupMap))];
+      if(existingGroups.length > 0) {
+        existingGroups.forEach(g => { if(!groupsDef.includes(g)) groupsDef.push(g); });
+      }
+      
+      document.getElementById('groupingOverlay').classList.add('active');
+      document.getElementById('groupingModal').classList.add('active');
+      renderGroupingUI();
+    }
+
+    function closeGroupingModal() {
+      document.getElementById('groupingOverlay').classList.remove('active');
+      document.getElementById('groupingModal').classList.remove('active');
+    }
+
+    function renderGroupingUI() {
+      const students = savedClasses[currentGroupingClass] || [];
+      document.getElementById('groupingStats').innerText = `Total Murid: ${students.length} | Kelas: ${currentGroupingClass}`;
+      document.getElementById('activeTargetLabel').innerHTML = `<i class="fas fa-bullseye"></i> Target: ${activeTargetGroup || 'Hapus'}`;
+      
+      const targetContainer = document.getElementById('targetGroupContainer');
+      targetContainer.innerHTML = '';
+      groupsDef.forEach(g => {
+        const count = students.filter(s => studentGroupMap[s] === g).length;
+        const btn = document.createElement('button');
+        btn.className = `target-pill ${activeTargetGroup === g ? 'active' : ''}`;
+        btn.onclick = () => { activeTargetGroup = g; SoundFX.click(); renderGroupingUI(); };
+        btn.innerHTML = `<i class="fas fa-check-circle" style="display:${activeTargetGroup === g ? 'inline-block' : 'none'}"></i> ${g} <span class="badge" style="background:${activeTargetGroup === g ? 'rgba(255,255,255,0.2)' : '#e2e8f0'}; color:${activeTargetGroup === g ? 'white' : '#475569'};">${count} murid</span>`;
+        targetContainer.appendChild(btn);
+      });
+      
+      const unassignedCount = students.filter(s => !studentGroupMap[s]).length;
+      const btnUnassigned = document.createElement('button');
+      btnUnassigned.className = `target-pill ${activeTargetGroup === null ? 'active' : ''}`;
+      btnUnassigned.onclick = () => { activeTargetGroup = null; SoundFX.click(); renderGroupingUI(); };
+      btnUnassigned.innerHTML = `Belum Dikelompokkan <span class="badge">${unassignedCount} murid</span>`;
+      targetContainer.appendChild(btnUnassigned);
+      
+      const btnAdd = document.createElement('button');
+      btnAdd.className = 'target-pill';
+      btnAdd.style.background = '#f8fafc';
+      btnAdd.style.color = '#475569';
+      btnAdd.style.border = '1px solid #cbd5e1';
+      btnAdd.onclick = () => addNewGroup();
+      btnAdd.innerHTML = `<i class="fas fa-plus"></i> Tambah Kelompok`;
+      targetContainer.appendChild(btnAdd);
+
+      const grid = document.getElementById('studentGridContainer');
+      grid.innerHTML = '';
+      students.forEach((s, i) => {
+        const group = studentGroupMap[s];
+        const isAssigned = !!group;
+        
+        const card = document.createElement('div');
+        // Match the advanced UI styling
+        card.style.background = 'white';
+        card.style.border = isAssigned ? '1px solid #10b981' : '1px solid #e2e8f0';
+        card.style.borderRadius = '8px';
+        card.style.padding = '12px 15px';
+        card.style.display = 'flex';
+        card.style.flexDirection = 'row';
+        card.style.alignItems = 'center';
+        card.style.justifyContent = 'space-between';
+        card.style.cursor = 'pointer';
+        card.style.boxShadow = '0 1px 2px rgba(0,0,0,0.05)';
+        
+        const leftContent = `
+          <div style="display:flex; align-items:center; gap: 15px;">
+            <div style="font-size: 1rem; color: #94a3b8; font-weight: 700; width: 20px; text-align: right;">${i+1}</div>
+            <div>
+              <div style="font-weight: bold; color: #334155; margin-bottom: 2px;">${s}</div>
+              <div style="font-size:0.75rem; color:#94a3b8;">Asesmen Awal:<br><span style="background:#f1f5f9; padding:2px 4px; border-radius:4px; color:#64748b; display:inline-block; margin-top:2px;">Belum Dinilai (0)</span></div>
+            </div>
+          </div>
+        `;
+        
+        const rightContent = `
+          <div style="background: ${isAssigned ? '#10b981' : '#f8fafc'}; color: ${isAssigned ? 'white' : '#64748b'}; padding: 6px 12px; border-radius: 20px; border: 1px solid ${isAssigned ? '#10b981' : '#cbd5e1'}; font-size: 0.8rem; font-weight: bold; white-space: nowrap;">
+            ${isAssigned ? '<i class="fas fa-check"></i> ' + group : 'Kelompok ' + (activeTargetGroup ? activeTargetGroup.replace('Kelompok ','') : '?')}
+          </div>
+        `;
+        
+        card.innerHTML = leftContent + rightContent;
+        
+        card.onclick = () => {
+          if(activeTargetGroup === null) { delete studentGroupMap[s]; }
+          else { studentGroupMap[s] = activeTargetGroup; }
+          SoundFX.click();
+          renderGroupingUI();
+        };
+        
+        grid.appendChild(card);
+      });
+    }
+
+    function resetGrouping() {
+      if(confirm("Apakah Anda yakin ingin mereset pemetaan kelas ini? Semua murid akan diubah menjadi belum dikelompokkan.")) {
+        studentGroupMap = {};
+        SoundFX.click();
+        renderGroupingUI();
+      }
+    }
+
+    function addNewGroup() {
+      const name = prompt("Masukkan nama kelompok/tim baru:", `Kelompok ${groupsDef.length + 1}`);
+      if(name && !groupsDef.includes(name)) {
+        groupsDef.push(name);
+        activeTargetGroup = name;
+        renderGroupingUI();
+      }
+    }
+
+    function saveGrouping() {
+      const savedMappings = JSON.parse(localStorage.getItem('savedGroupMappings') || '{}');
+      savedMappings[currentGroupingClass] = studentGroupMap;
+      localStorage.setItem('savedGroupMappings', JSON.stringify(savedMappings));
+      SoundFX.success();
+      closeGroupingModal();
+      showToast("Pemetaan kelompok berhasil disimpan!");
+      updateTeamDropdowns();
+      if (typeof updateLKIdentityFields === 'function') {
+        updateLKIdentityFields();
+      }
+    }
+
+    function updateTeamDropdowns() {
+      const clsElement = document.getElementById('lkClass');
+      const cls = clsElement ? clsElement.value : '';
+      if(!cls) return;
+      const map = JSON.parse(localStorage.getItem('savedGroupMappings') || '{}')[cls] || {};
+      const groups = [...new Set(Object.values(map))];
+      ['A', 'B'].forEach(t => {
+        const sel = document.getElementById('groupSelect'+t);
+        if(!sel) return;
+        sel.innerHTML = '<option value="">-- Isi dari Pemetaan --</option>';
+        groups.forEach(g => {
+          sel.innerHTML += `<option value="${g}">${g}</option>`;
+        });
+      });
+    }
+
+    function autoFillTeam(team, groupName) {
+      if(!groupName) return;
+      const clsElement = document.getElementById('lkClass');
+      const cls = clsElement ? clsElement.value : '';
+      const map = JSON.parse(localStorage.getItem('savedGroupMappings') || '{}')[cls] || {};
+      const studentsInGroup = Object.keys(map).filter(k => map[k] === groupName);
+      
+      document.getElementById(`team${team}Name`).value = groupName;
+      for(let i=1; i<=6; i++) {
+        document.getElementById(`in-${team}-p${i}`).value = studentsInGroup[i-1] || '';
+      }
+      SoundFX.click();
+      showToast(`Tim ${team} diisi dengan anggota ${groupName}`);
+    }
+
+    const _oldLoadSelectedClass = window.loadSelectedClass;
+    window.loadSelectedClass = function() {
+      if(_oldLoadSelectedClass) _oldLoadSelectedClass();
+      updateTeamDropdowns();
+    };
+    setTimeout(updateTeamDropdowns, 500);
+
+    // ==========================================
+    // FITUR IDENTITAS LK
+    // ==========================================
+    function populateLKClasses() {
+      const classSelect = document.getElementById('lkClass');
+      if(!classSelect) return;
+      const currentVal = classSelect.value;
+      classSelect.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      Object.keys(savedClasses).forEach(cls => {
+        classSelect.innerHTML += `<option value="${cls}">${cls}</option>`;
+      });
+      if (savedClasses[currentVal]) classSelect.value = currentVal;
+    }
+
+    function updateLKIdentityFields() {
+      const mode = document.getElementById('lkMode').value;
+      const cls = document.getElementById('lkClass').value;
+      const nameSelect = document.getElementById('lkName');
+      const labelName = document.getElementById('lkLabelName');
+      
+      if (!cls) {
+        nameSelect.innerHTML = '<option value="">-- Pilih Kelas Terlebih Dahulu --</option>';
+        return;
+      }
+      
+      nameSelect.innerHTML = '<option value="">-- Silakan Pilih --</option>';
+      if (mode === 'individu') {
+        labelName.innerText = "Nama Murid";
+        document.getElementById('btnAturPemetaan').style.display = 'none';
+        const students = savedClasses[cls] || [];
+        students.forEach(s => {
+          nameSelect.innerHTML += `<option value="${s}">${s}</option>`;
+        });
+      } else {
+        labelName.innerText = "Pilih Kelompok (Dari Pemetaan)";
+        document.getElementById('btnAturPemetaan').style.display = 'block';
+        const map = JSON.parse(localStorage.getItem('savedGroupMappings') || '{}')[cls] || {};
+        const groups = [...new Set(Object.values(map))];
+        if(groups.length === 0) {
+           nameSelect.innerHTML = '<option value="">-- Belum ada pemetaan kelompok --</option>';
+        } else {
+           groups.forEach(g => {
+             nameSelect.innerHTML += `<option value="${g}">${g}</option>`;
+           });
+        }
+      }
+      
+      if(typeof updateLK1PrintHeaders === 'function') {
+        updateLK1PrintHeaders();
+      }
+    }
+    
+    const _oldPopulateClassDropdown = window.populateClassDropdown;
+    window.populateClassDropdown = function() {
+      if(_oldPopulateClassDropdown) _oldPopulateClassDropdown();
+      populateLKClasses();
+    };
+    setTimeout(() => {
+      populateLKClasses();
+      setTimeout(loadLKData, 300);
+    }, 500);
+
+    // --- AUTO-SAVE LOGIC ---
+    function saveLKData() {
+      const data = {
+        mode: document.getElementById('lkMode').value,
+        cls: document.getElementById('lkClass').value,
+        name: document.getElementById('lkName').value,
+        date: document.getElementById('lkDate').value,
+        inputs: []
+      };
+      const els = document.querySelectorAll('#tabAnalisis textarea, #tabAnalisis input[type="checkbox"]');
+      els.forEach(el => {
+        data.inputs.push(el.type === 'checkbox' ? el.checked : el.value);
+      });
+      localStorage.setItem('savedLKData', JSON.stringify(data));
+    }
+
+    function loadLKData() {
+      const raw = localStorage.getItem('savedLKData');
+      if(!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        if(data.mode) document.getElementById('lkMode').value = data.mode;
+        updateLKIdentityFields();
+        
+        if(data.cls) {
+          document.getElementById('lkClass').value = data.cls;
+          updateLKIdentityFields();
+        }
+        
+        if(data.name) {
+          document.getElementById('lkName').value = data.name;
+          if(typeof updateLK1PrintHeaders === 'function') updateLK1PrintHeaders();
+        }
+        
+        if(data.date !== undefined) {
+          document.getElementById('lkDate').value = data.date;
+          if(typeof updateLK1PrintHeaders === 'function') updateLK1PrintHeaders();
+        }
+        
+        const els = document.querySelectorAll('#tabAnalisis textarea, #tabAnalisis input[type="checkbox"]');
+        data.inputs.forEach((val, i) => {
+          if(els[i]) {
+            if(els[i].type === 'checkbox') els[i].checked = val;
+            else els[i].value = val;
+          }
+        });
+      } catch(e) {}
+    }
+
+    document.getElementById('tabAnalisis').addEventListener('input', (e) => {
+      if(e.target.tagName === 'TEXTAREA' || e.target.type === 'checkbox' || e.target.type === 'radio') {
+        saveLKData();
+      }
+    });
+    document.getElementById('tabAnalisis').addEventListener('change', (e) => {
+      if(e.target.type === 'checkbox' || e.target.type === 'radio') {
+        saveLKData();
+      }
+    });
+    
+    document.getElementById('lkMode').addEventListener('change', saveLKData);
+    document.getElementById('lkClass').addEventListener('change', saveLKData);
+    document.getElementById('lkName').addEventListener('change', saveLKData);
+    document.getElementById('lkDate').addEventListener('change', saveLKData);
+
+    // Update manual save buttons to also trigger saveLKData explicitly
+    const saveBtns = document.querySelectorAll('#lk1-print-btn button:nth-child(2), #lk2-print-btn button:nth-child(2)');
+    saveBtns.forEach(btn => {
+      const oldClick = btn.onclick;
+      btn.onclick = (e) => {
+        saveLKData();
+        if(oldClick) oldClick(e);
+      };
+    });
+
+  </script>
+</body>
+</html>
