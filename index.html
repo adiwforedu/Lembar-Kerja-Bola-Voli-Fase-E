@@ -71,7 +71,7 @@
       --danger: #ef4444; 
       --warning: #f59e0b;
       --court-out: #2563eb; 
-      --court-in: #f97316; 
+      --court-in: #d4a373; 
       --net-color: #ffffff;
       --radius-sm: 8px;
       --radius-md: 12px;
@@ -325,7 +325,7 @@
       display: flex; flex-direction: column; justify-content: center;
     }
     .court-inner { 
-      background: linear-gradient(180deg, #ea580c 0%, #c2410c 100%); 
+      background: linear-gradient(180deg, #dcb589 0%, #c89666 100%); 
       flex: 1; 
       border: 3px solid #ffffff; 
       position: relative; 
@@ -1330,6 +1330,13 @@
 
   <!-- VIEW 2: LIVE ASSESSMENT -->
   <div id="assessmentView" style="display:none;">
+    <div style="background: #0f172a; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1);">
+      <button style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 6px; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: inherit;" onclick="returnToLK()">
+        <i class="fas fa-arrow-left"></i> Buka LK
+      </button>
+      <div style="color: #cbd5e1; font-weight: bold; font-size: 0.9rem; letter-spacing: 1px;">SIMULASI BERJALAN</div>
+      <div style="width: 80px;"></div> <!-- spacer for centering -->
+    </div>
     <div class="scoreboard">
       <div class="team-score"><div class="name"><span id="sbNameA">TIM A</span> <span class="serve-indicator" id="serveA">🏐</span></div><div class="score-controls"><button class="score-btn" onclick="changeScore('A', -1)">-</button><div class="score-display" id="scoreA">0</div><button class="score-btn" onclick="changeScore('A', 1)">+</button></div></div>
       <div class="score-divider">:</div>
@@ -1339,12 +1346,26 @@
     <div class="container">
       <div class="brand-text">BOLA VOLI SMANDACIS</div>
       <div class="court-live-wrapper">
-        <button class="btn-rotate rotate-top" onclick="rotateTeam('B')"><i class="fas fa-redo"></i></button>
-        <button class="btn-rotate rotate-bot" onclick="rotateTeam('A')"><i class="fas fa-redo"></i></button>
+        <div style="position: absolute; right: -12px; top: 15%; z-index: 10; display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-rotate" style="position:static; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);" onclick="rotateTeamUndo('B')" title="Rotasi Mundur (Undo)"><i class="fas fa-undo"></i></button>
+          <button class="btn-rotate" style="position:static; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="rotateTeam('B')" title="Rotasi Maju"><i class="fas fa-redo"></i></button>
+        </div>
+        <div style="position: absolute; right: -12px; bottom: 15%; z-index: 10; display:flex; flex-direction:column; gap:8px;">
+          <button class="btn-rotate" style="position:static; background: linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="rotateTeam('A')" title="Rotasi Maju"><i class="fas fa-redo"></i></button>
+          <button class="btn-rotate" style="position:static; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);" onclick="rotateTeamUndo('A')" title="Rotasi Mundur (Undo)"><i class="fas fa-undo"></i></button>
+        </div>
         <div class="court-live">
           <button style="position:absolute; top:10px; left:10px; z-index:20; background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:var(--primary); cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="SoundFX.click(); document.getElementById('manualOverlay').classList.add('active'); document.getElementById('manualMenu').classList.add('active');"><i class="fas fa-cog"></i> Manual</button>
           <button style="position:absolute; top:10px; right:10px; z-index:20; background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:var(--primary); cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="SoundFX.click(); openAddRoleModal();"><i class="fas fa-plus"></i> Peran</button>
+          
+          <!-- TOMBOL STRATEGI -->
+          <div style="position:absolute; top:10px; left:50%; transform: translateX(-50%); z-index:30; display:flex; gap: 8px;">
+            <button id="btnStrategy" style="background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:#f59e0b; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="toggleStrategyMode()"><i class="fas fa-pencil-alt"></i> Strategi</button>
+            <button id="btnClearCanvas" style="display:none; background:rgba(255,255,255,0.9); border:none; padding:8px 12px; border-radius:8px; font-weight:bold; color:#ef4444; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);" onclick="clearStrategyCanvas()"><i class="fas fa-eraser"></i> Hapus</button>
+          </div>
+
           <div class="court-inner" id="courtInnerBox">
+            <canvas id="strategyCanvas" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 4; pointer-events: none; touch-action: none;"></canvas>
             <div class="net-marker"></div>
             <div class="half-court top"><div class="court-label" id="labelTop">TIM B</div><div class="attack-line-top"></div></div>
             <div class="half-court bot"><div class="court-label" id="labelBot">TIM A</div><div class="attack-line-bot"></div></div>
@@ -1548,6 +1569,21 @@
       document.getElementById('btnTabSimulasi').classList.toggle('active', tab === 'simulasi');
       document.getElementById('tabAnalisis').classList.toggle('active-tab', tab === 'analisis');
       document.getElementById('tabSimulasi').classList.toggle('active-tab', tab === 'simulasi');
+      
+      // Auto-hide header (re-enter live mode) jika match sedang berjalan dan kita buka tab Simulasi
+      if (tab === 'simulasi' && document.getElementById('assessmentView').classList.contains('active-flex')) {
+        document.body.classList.add('live-mode');
+      } else {
+        document.body.classList.remove('live-mode');
+      }
+    }
+
+    function returnToLK() {
+      SoundFX.click();
+      document.body.classList.remove('live-mode');
+      switchMainTab('analisis');
+      // Scroll to top of LK
+      window.scrollTo(0, 0);
     }
 
     function switchSubLK(lk) {
@@ -1594,6 +1630,11 @@
     let savedClasses = {}; // Object untuk menyimpan daftar kelas-kelas (Kunci: Nama Kelas, Value: Array Murid)
 
     document.addEventListener('DOMContentLoaded', () => {
+      const teamAInput = document.getElementById('teamAName');
+      const teamBInput = document.getElementById('teamBName');
+      if(teamAInput) teamAInput.addEventListener('input', saveSimulationSetup);
+      if(teamBInput) teamBInput.addEventListener('input', saveSimulationSetup);
+
       const inputs = document.querySelectorAll('.player-input');
       inputs.forEach(input => {
         input.addEventListener('focus', function() {
@@ -1601,7 +1642,10 @@
           this.classList.add('active-input');
           activePlayerInput = this;
         });
-        input.addEventListener('input', function() { checkUsedChips(); });
+        input.addEventListener('input', function() { 
+          checkUsedChips(); 
+          saveSimulationSetup();
+        });
       });
       
       // ==========================================
@@ -1644,7 +1688,37 @@
         document.getElementById('classSelector').value = "";
         document.getElementById('rosterChips').innerHTML = '';
       }
+      
+      restoreSimulationSetup();
     });
+
+    function saveSimulationSetup() {
+      let setupData = {
+        teamA: document.getElementById('teamAName') ? document.getElementById('teamAName').value : '',
+        teamB: document.getElementById('teamBName') ? document.getElementById('teamBName').value : '',
+        players: {}
+      };
+      document.querySelectorAll('.player-input').forEach(input => {
+        setupData.players[input.id] = input.value;
+      });
+      localStorage.setItem('savedSimulationSetup', JSON.stringify(setupData));
+    }
+
+    function restoreSimulationSetup() {
+      let data = localStorage.getItem('savedSimulationSetup');
+      if(data) {
+        let setupData = JSON.parse(data);
+        if(setupData.teamA && document.getElementById('teamAName')) document.getElementById('teamAName').value = setupData.teamA;
+        if(setupData.teamB && document.getElementById('teamBName')) document.getElementById('teamBName').value = setupData.teamB;
+        if(setupData.players) {
+          for(let id in setupData.players) {
+            let el = document.getElementById(id);
+            if(el) el.value = setupData.players[id];
+          }
+        }
+        checkUsedChips();
+      }
+    }
 
     function populateClassDropdown() {
       const select = document.getElementById('classSelector');
@@ -2057,6 +2131,7 @@
     document.addEventListener('click', () => { document.getElementById('customTooltip').classList.remove('show'); });
 
     function openScoringSheet(nodeId) {
+      if(typeof isStrategyMode !== 'undefined' && isStrategyMode) return;
       activeNodeId = nodeId; const p = allParticipants.find(x => x.id === nodeId);
       document.getElementById('sheetStudentName').innerText = p.name; document.getElementById('sheetRoleLabel').innerText = p.role === 'player' ? p.team : p.team; 
 
@@ -2727,6 +2802,147 @@
         if(oldClick) oldClick(e);
       };
     });
+
+    // ===== PAPAN STRATEGI (INTERAKTIF) =====
+    let isStrategyMode = false;
+    let strategyCanvas, strategyCtx;
+    let isDrawingStrategy = false;
+    let draggedNode = null;
+
+    function toggleStrategyMode() {
+      SoundFX.click();
+      isStrategyMode = !isStrategyMode;
+      const btn = document.getElementById('btnStrategy');
+      const canvasEl = document.getElementById('strategyCanvas');
+      const btnClear = document.getElementById('btnClearCanvas');
+      
+      if(isStrategyMode) {
+        btn.innerHTML = '<i class="fas fa-times"></i> Tutup';
+        btn.style.color = '#ef4444';
+        canvasEl.style.pointerEvents = 'auto';
+        btnClear.style.display = 'block';
+        initStrategyCanvas();
+        showToast("Papan Strategi AKTIF! Seret pemain atau coret lapangan bebas.");
+      } else {
+        btn.innerHTML = '<i class="fas fa-pencil-alt"></i> Strategi';
+        btn.style.color = '#f59e0b';
+        canvasEl.style.pointerEvents = 'none';
+        btnClear.style.display = 'none';
+        clearStrategyCanvas();
+        
+        // Reset player positions back to original CSS class placements
+        document.querySelectorAll('.player-node').forEach(el => {
+          el.style.top = '';
+          el.style.left = '';
+          el.style.transition = 'top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), left 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.15s ease, border-color 0.3s ease';
+        });
+        showToast("Papan Strategi DITUTUP. Posisi pemain kembali normal.");
+      }
+    }
+
+    function initStrategyCanvas() {
+      if(!strategyCanvas) {
+        strategyCanvas = document.getElementById('strategyCanvas');
+        strategyCtx = strategyCanvas.getContext('2d');
+        resizeStrategyCanvas();
+        window.addEventListener('resize', resizeStrategyCanvas);
+        
+        // Drawing events
+        strategyCanvas.addEventListener('mousedown', startDraw);
+        strategyCanvas.addEventListener('mousemove', draw);
+        strategyCanvas.addEventListener('mouseup', stopDraw);
+        strategyCanvas.addEventListener('mouseout', stopDraw);
+        
+        strategyCanvas.addEventListener('touchstart', startDraw, {passive: false});
+        strategyCanvas.addEventListener('touchmove', draw, {passive: false});
+        strategyCanvas.addEventListener('touchend', stopDraw);
+
+        // Dragging events for player nodes
+        const courtBox = document.getElementById('courtInnerBox');
+        courtBox.addEventListener('mousedown', startDragNode);
+        document.addEventListener('mousemove', dragNode);
+        document.addEventListener('mouseup', stopDragNode);
+
+        courtBox.addEventListener('touchstart', startDragNode, {passive: false});
+        document.addEventListener('touchmove', dragNode, {passive: false});
+        document.addEventListener('touchend', stopDragNode);
+      }
+    }
+
+    function resizeStrategyCanvas() {
+      if(strategyCanvas) {
+        strategyCanvas.width = strategyCanvas.offsetWidth;
+        strategyCanvas.height = strategyCanvas.offsetHeight;
+      }
+    }
+
+    function getMousePos(evt) {
+      const rect = strategyCanvas.getBoundingClientRect();
+      if(evt.touches) {
+        return { x: evt.touches[0].clientX - rect.left, y: evt.touches[0].clientY - rect.top };
+      }
+      return { x: evt.clientX - rect.left, y: evt.clientY - rect.top };
+    }
+
+    function startDraw(e) {
+      if(!isStrategyMode) return;
+      e.preventDefault();
+      isDrawingStrategy = true;
+      const pos = getMousePos(e);
+      strategyCtx.beginPath();
+      strategyCtx.moveTo(pos.x, pos.y);
+    }
+
+    function draw(e) {
+      if(!isDrawingStrategy) return;
+      e.preventDefault();
+      const pos = getMousePos(e);
+      strategyCtx.lineTo(pos.x, pos.y);
+      strategyCtx.strokeStyle = '#ffffff'; 
+      strategyCtx.lineWidth = 4;
+      strategyCtx.lineCap = 'round';
+      strategyCtx.stroke();
+    }
+
+    function stopDraw() { isDrawingStrategy = false; }
+    
+    function clearStrategyCanvas() { 
+      if(strategyCtx && strategyCanvas) { 
+        strategyCtx.clearRect(0, 0, strategyCanvas.width, strategyCanvas.height); 
+      } 
+    }
+
+    function startDragNode(e) {
+       if(!isStrategyMode) return;
+       let target = e.target.closest('.player-node');
+       if(target) {
+          e.preventDefault();
+          draggedNode = target;
+          draggedNode.style.transition = 'none'; 
+       }
+    }
+
+    function dragNode(e) {
+       if(!draggedNode || !isStrategyMode) return;
+       e.preventDefault();
+       let clientX = e.touches ? e.touches[0].clientX : e.clientX;
+       let clientY = e.touches ? e.touches[0].clientY : e.clientY;
+       
+       const courtRect = document.getElementById('courtInnerBox').getBoundingClientRect();
+       let x = clientX - courtRect.left;
+       let y = clientY - courtRect.top;
+       
+       // Keep within court bounds loosely
+       x = Math.max(0, Math.min(x, courtRect.width));
+       y = Math.max(0, Math.min(y, courtRect.height));
+       
+       draggedNode.style.left = x + 'px';
+       draggedNode.style.top = y + 'px';
+    }
+
+    function stopDragNode() {
+       if(draggedNode) { draggedNode = null; }
+    }
 
   </script>
 </body>
